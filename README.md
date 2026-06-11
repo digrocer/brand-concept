@@ -2,7 +2,14 @@
 
 Brand exploration for **DiGrocer** — a decision lab plus a full iOS-27 concept of the real apps. Everything is plain HTML/CSS/JS: no build, no dependencies, open any file in a browser.
 
-## ✦ The iOS-27 concept (`concept/`)
+## ✦ Lab-theme platform editions (`ios/` &amp; `android/`)
+
+The same two apps, dressed in the **lab's own theme** — Market Classic by day, Evening Delivery for the dark rider app — with the Sprout-d bowl mark, the lowercase `digrocer.` wordmark, and the lab type pairing (Baloo 2 display · DM Sans body · Fraunces whispers).
+
+- [`ios/`](ios/index.html) — the **iOS-27 feel**: liquid glass, Dynamic Island, springy motion, particle Sprout-d splash, graceful `@supports` floor.
+- [`android/`](android/index.html) — the **Android 16 feel**: Material 3 Expressive. Tonal surfaces instead of blur, ink ripples on every tap, shape-morphing buttons, flush M3 navigation bar with pill indicator, M3 switches, punch-hole camera + gesture handle, emphasized easing (no overshoot), Roboto Flex.
+
+## ✦ The original iOS-27 concept (`concept/`)
 
 Every screen of the production **customer** and **rider** apps, mirrored detail-for-detail from the real codebase (screens, flows, copy, the Warm-Market palette from `Color.kt`, the Kente-D mark) — then transformed into the liquid-glass iOS-27 language with a graceful floor for older devices.
 
