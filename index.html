@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>digrocer — brand concept lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=DM+Sans:opsz,wght@9..40,400..700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7EFDF; --surface:#FFFDF7; --ink:#22271F; --muted:#6F7466;
+  --line:rgba(34,39,31,.14);
+  --primary:#1F5130; --on-primary:#FFFDF7;
+  --accent:#E0452B; --on-accent:#FFFDF7;
+  --highlight:#F5C84C; --on-highlight:#22271F;
+  --shadow:0 3px 16px rgba(34,39,31,.08);
+  --r:18px; --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:92px;transition:background .4s,color .4s}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+
+/* ===== control bar ===== */
+.bar{position:sticky;top:0;z-index:60;background:var(--surface);border-bottom:1.5px solid var(--line);transition:background .4s}
+.bar-in{display:flex;align-items:center;gap:14px;padding:10px 22px;max-width:1160px;margin:0 auto;flex-wrap:wrap}
+.bar-logo{display:flex;align-items:center;gap:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:21px;color:var(--primary)}
+.bar-logo .dot{color:var(--accent)}
+.bar-logo svg{width:30px;height:30px}
+.chips{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 13px 6px 7px;font-size:12.5px;font-weight:600;transition:transform .2s var(--spring)}
+.chip:hover{transform:translateY(-1px)}
+.chip.active{border-color:var(--primary);background:var(--primary);color:var(--on-primary)}
+.chip .dots{display:flex}
+.chip .dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--surface)}
+.chip .dots i+i{margin-left:-5px}
+.sel-count{border:none;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:13px;border-radius:999px;padding:8px 16px;transition:transform .2s var(--spring)}
+.sel-count:hover{transform:scale(1.04)}
+
+/* ===== generic ===== */
+section{padding:62px 0}
+section.alt{background:var(--surface);transition:background .4s}
+.sticker{display:inline-block;font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-accent);background:var(--accent);padding:7px 18px;border-radius:999px;transform:rotate(-2deg)}
+.sticker.g{background:var(--primary);color:var(--on-primary)}
+.sticker.y{background:var(--highlight);color:var(--on-highlight)}
+h2{font-family:'Fraunces',serif;font-weight:800;letter-spacing:-.01em;font-size:clamp(26px,4vw,38px);line-height:1.12;margin:14px 0 8px}
+.sec-head{margin-bottom:34px;max-width:700px}
+.sec-head p{font-size:16.5px;color:var(--muted)}
+.pickline{font-size:13px;font-weight:700;color:var(--accent);margin-top:6px}
+
+/* hero */
+.hero{padding:54px 0 44px;text-align:center}
+.hero h1{font-family:'Baloo 2',sans-serif;font-weight:700;line-height:1;font-size:clamp(42px,8vw,80px);letter-spacing:-.03em;color:var(--primary)}
+.hero h1 .dot{color:var(--accent)}
+.hero .tag{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(17px,2.2vw,22px);margin-top:10px;opacity:.85}
+.hero .how{margin:24px auto 0;max-width:620px;background:var(--surface);border:1.5px dashed var(--line);border-radius:var(--r);padding:15px 22px;font-size:14.5px;color:var(--muted);text-align:left;transition:background .4s}
+.hero .how b{color:var(--ink)}
+
+/* ===== variant cards ===== */
+.vgrid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(205px,1fr))}
+.v{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);border:2.5px solid transparent;cursor:pointer;position:relative;transition:transform .22s var(--spring),border-color .2s,background .4s;overflow:hidden}
+section.alt .v{background:var(--bg)}
+.v:hover{transform:translateY(-3px)}
+.v.selected{border-color:var(--accent)}
+.v.selected::after{content:"✓ picked";position:absolute;top:10px;right:10px;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:4px 10px;animation:pop .35s var(--spring);z-index:5}
+.v .opt{position:absolute;top:10px;left:10px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:5;opacity:.85}
+.vs{height:150px;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden;transition:background .4s}
+section.alt .vs{background:var(--surface)}
+.vs.dk{background:var(--ink)}
+.vs.gr{background:var(--primary)}
+.vc{padding:12px 16px 14px}
+.vc h4{font-family:'Baloo 2',sans-serif;font-size:15.5px}
+.vc p{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+.replay-hint{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:6px}
+
+/* ===== keyframes ===== */
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes sproutLeaf{0%{transform:scale(0) rotate(-20deg)}70%{transform:scale(1.2) rotate(4deg)}100%{transform:scale(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes dropB{0%{transform:translateY(-130px)}55%{transform:translateY(0)}70%{transform:translateY(-18px)}85%{transform:translateY(0)}93%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes spinIn{0%{transform:rotate(-200deg) scale(0)}75%{transform:rotate(10deg) scale(1.08)}100%{transform:rotate(0) scale(1)}}
+@keyframes growUp{0%{transform:scaleY(0)}70%{transform:scaleY(1.08)}100%{transform:scaleY(1)}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes basket{0%,100%{transform:translateY(0)}30%{transform:translateY(7px) scaleY(.94)}55%{transform:translateY(-4px)}}
+@keyframes dropIn{0%{transform:translateY(-46px);opacity:0}60%{transform:translateY(4px);opacity:1}100%{transform:translateY(0)}}
+@keyframes flyArc{0%{left:14%;top:46%;transform:scale(1)}45%{top:6%}100%{left:72%;top:40%;transform:scale(.25);opacity:.9}}
+@keyframes morphW{0%{width:128px;border-radius:999px}55%{width:42px}100%{width:42px;border-radius:50%}}
+@keyframes fadeOutQ{0%{opacity:1}40%,100%{opacity:0}}
+@keyframes fadeInL{0%,60%{opacity:0;transform:scale(.4)}85%{opacity:1;transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes pingBdg{0%{transform:scale(0)}60%{transform:scale(1.5)}100%{transform:scale(1)}}
+@keyframes floatUp{0%{opacity:0;transform:translateY(8px)}30%{opacity:1}100%{opacity:0;transform:translateY(-26px)}}
+@keyframes heartBeat{0%{transform:scale(0)}55%{transform:scale(1.35)}75%{transform:scale(.92)}100%{transform:scale(1)}}
+@keyframes dblPulse{0%,100%{transform:scale(1)}18%{transform:scale(1.28)}36%{transform:scale(1)}54%{transform:scale(1.18)}}
+@keyframes ringOut{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+@keyframes burst{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--tx),var(--ty)) rotate(var(--rr));opacity:0}}
+@keyframes fillClip{0%{clip-path:inset(100% 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes bloom{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes slideSpr{0%{transform:translateX(120%)}70%{transform:translateX(-4%)}100%{transform:translateX(0)}}
+@keyframes wipeL{0%{transform:translateX(-130%) rotate(-8deg)}100%{transform:translateX(140%) rotate(-8deg)}}
+@keyframes spinL{to{transform:rotate(360deg)}}
+@keyframes dotB{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}}
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+@keyframes fillGrow{0%{height:6%}100%{height:78%}}
+@keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+
+/* ===== A. LOGO INTRO ANIMS ===== */
+.lg svg{width:96px;height:96px;overflow:visible}
+.lg [class^="p-"]{transform-box:fill-box}
+.la1.play .bowl{stroke-dasharray:190;stroke-dashoffset:190;animation:draw .7s ease forwards}
+.la1.play .lfA{transform-origin:0% 100%;animation:sproutLeaf .55s var(--spring) .42s both}
+.la1.play .lfB{transform-origin:0% 100%;animation:sproutLeaf .55s var(--spring) .55s both}
+.la2.play svg{animation:dropB .9s ease both}
+.la3.play svg{animation:spinIn .8s var(--spring) both}
+.la4.play .stm{transform-origin:50% 100%;animation:growUp .55s var(--spring) both}
+.la4.play .bwl{transform-origin:50% 50%;animation:pop .5s var(--spring) .4s both}
+.la4.play .lfA{transform-origin:0% 100%;animation:sproutLeaf .5s var(--spring) .62s both}
+.la4.play .lfB{transform-origin:0% 100%;animation:sproutLeaf .5s var(--spring) .74s both}
+
+/* ===== B. WORDMARKS ===== */
+.wmk{font-size:34px;letter-spacing:-.02em;line-height:1}
+.wmk .dot{color:var(--accent)}
+.w1{font-family:'Baloo 2',sans-serif;font-weight:700;color:var(--primary)}
+.w2{font-family:'Baloo 2',sans-serif;font-weight:700;color:var(--primary);position:relative}
+.w2 .ip{position:relative;display:inline-block}
+.w2 .ip svg{position:absolute;left:50%;top:-1px;transform:translateX(-50%);width:13px;height:13px}
+.w3{font-family:'Fraunces',serif;font-weight:600;color:var(--primary)}
+.w4{font-family:'DM Sans',sans-serif;font-weight:700;color:var(--primary);letter-spacing:-.01em}
+
+/* ===== C. APP ICONS ===== */
+.aic{width:88px;height:88px;border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.aic svg{width:56px;height:56px}
+
+/* ===== D. SPLASH (mini phones) ===== */
+.mini{width:148px;height:296px;border-radius:24px;border:5px solid #20231E;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;background:var(--surface);transition:background .4s}
+.mini .mwm{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:17px;margin-top:8px;z-index:2;position:relative}
+.mini svg{width:52px;height:52px;z-index:2;position:relative}
+.spl1{background:var(--primary);color:var(--on-primary)}
+.spl1.play svg{animation:pop .55s var(--spring) both}
+.spl1.play .mwm{animation:fadeUp .45s ease .55s both}
+.spl2{background:var(--ink);color:var(--on-primary)}
+.spl2 .circ{position:absolute;width:340px;height:340px;border-radius:50%;background:var(--primary)}
+.spl2.play .circ{animation:bloom .7s var(--spring) both}
+.spl2.play svg{animation:pop .5s var(--spring) .4s both}
+.spl2.play .mwm{animation:fadeUp .4s ease .7s both}
+.spl3{background:var(--surface);color:var(--primary)}
+.spl3.play svg{animation:spinIn .75s var(--spring) both}
+.spl3.play .mwm{animation:fadeUp .45s ease .6s both}
+.spl3 .tgl3{font-family:'Fraunces',serif;font-style:italic;font-size:10.5px;color:var(--muted);margin-top:3px;z-index:2}
+.spl3.play .tgl3{animation:fadeUp .45s ease .8s both}
+
+/* ===== E. PRICE TAGS ===== */
+.pt1{background:var(--highlight);color:var(--on-highlight);font-family:'Baloo 2',sans-serif;font-weight:800;font-size:17px;padding:10px 18px 10px 26px;border-radius:8px;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%)}
+.pt2{display:inline-block;background:var(--accent);color:var(--on-accent);font-family:'Baloo 2',sans-serif;font-weight:800;font-size:15px;padding:11px 20px;border-radius:999px;transform:rotate(-3deg);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.pt3{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:25px;color:var(--primary)}
+.pt3 sup{font-size:12px;font-weight:800;color:var(--muted);margin-right:3px}
+.pt4{background:var(--primary);color:var(--on-primary);font-weight:800;font-size:15px;padding:9px 18px;border-radius:999px}
+.pt5{font-family:'Fraunces',serif;font-weight:700;font-size:22px;position:relative;color:var(--ink)}
+.pt5 svg{position:absolute;left:0;bottom:-9px;width:100%}
+
+/* ===== F. BUTTONS ===== */
+.bt{border:none;font-weight:800;font-size:13.5px;padding:12px 22px;transition:transform .2s var(--spring)}
+.bt:active{transform:scale(.94)}
+.bt1{background:var(--primary);color:var(--on-primary);border-radius:999px}
+.bt2{background:var(--primary);color:var(--on-primary);border-radius:13px}
+.bt3{background:transparent;color:var(--primary);border:2px solid var(--primary);border-radius:999px}
+.bt4{background:var(--highlight);color:var(--on-highlight);border-radius:11px;box-shadow:3.5px 3.5px 0 var(--ink)}
+.bt4:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+/* ===== G. PRODUCT CARDS ===== */
+.pc{width:128px;border-radius:14px;position:relative;text-align:left}
+.pc .im{height:58px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:23px;transition:background .4s}
+.pc h6{font-size:11px;font-weight:700;margin-top:6px}
+.pc .pr{font-size:10.5px;color:var(--muted)}
+.pc .ad{position:absolute;width:23px;height:23px;border-radius:50%;border:none;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:13px;line-height:1;right:7px;bottom:7px}
+.pc1{background:var(--bg);padding:9px;transition:background .4s}
+section.alt .pc1{background:var(--surface)}
+.pc2{padding:0 0 8px;border-bottom:2px dashed var(--line)}
+.pc2 .im{background:var(--bg)}
+section.alt .pc2 .im{background:var(--surface)}
+.pc2 .ad{bottom:auto;top:42px}
+.pc3{border:2px solid var(--line);padding:9px;background:transparent}
+.pc4{padding:0}
+.pc4 .im{height:84px;border-radius:14px;font-size:30px;background:var(--bg)}
+section.alt .pc4 .im{background:var(--surface)}
+.pc4 .ad{top:68px;bottom:auto;box-shadow:0 3px 8px rgba(0,0,0,.22)}
+.pc4 .meta{padding:8px 4px 0}
+
+/* ===== H. BOTTOM NAVS ===== */
+.nv{width:182px;background:var(--surface);border-radius:14px;display:flex;padding:9px 8px;box-shadow:var(--shadow);transition:background .4s}
+.nv div{flex:1;text-align:center;font-size:8.5px;font-weight:700;color:var(--muted);position:relative}
+.nv div.on{color:var(--primary)}
+.nv svg{width:17px;height:17px;display:block;margin:0 auto 2px}
+.nv2 div span.pill{position:absolute;inset:-5px 4px;background:var(--highlight);border-radius:999px;z-index:0;opacity:.55}
+.nv2 svg{position:relative;z-index:1;margin-bottom:0}
+.nv3{border-radius:999px;align-items:center;padding:8px 12px}
+.nv3 .fabC{width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;margin:-16px auto 0;box-shadow:0 5px 12px rgba(0,0,0,.25)}
+.nv3 .fabC svg{width:16px;height:16px;margin:0}
+
+/* ===== I. ADD-TO-BASKET ===== */
+.ab .cartT{position:absolute;right:14%;top:34%}
+.ab1 .dotp{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--accent);left:14%;top:46%}
+.ab1.play .dotp{animation:flyArc .8s ease-in both}
+.ab1.play .cartT{animation:basket .6s var(--spring) .75s both}
+.ab2.play .itm{animation:dropIn .45s var(--spring) both}
+.ab2.play .bsk{animation:basket .7s var(--spring) .35s both}
+.ab3 .mwrap{position:relative;height:44px;display:flex;align-items:center;justify-content:center}
+.ab3 .mbtn{height:42px;width:128px;border:none;border-radius:999px;background:var(--primary);color:var(--on-primary);font-weight:800;font-size:12.5px;position:relative;overflow:hidden}
+.ab3.play .mbtn{animation:morphW .8s var(--spring) .25s both}
+.ab3 .mbtn .lb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.ab3.play .mbtn .lb{animation:fadeOutQ .5s ease .25s both}
+.ab3 .mbtn .ck{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;opacity:0}
+.ab3.play .mbtn .ck{animation:fadeInL .9s var(--spring) .25s both}
+.ab4 .bdg{position:absolute;top:-7px;right:-7px;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:800;border-radius:999px;padding:2px 6.5px}
+.ab4.play .bdg{animation:pingBdg .55s var(--spring) .25s both}
+.ab4 .plus{position:absolute;top:-22px;right:-4px;font-weight:800;font-size:13px;color:var(--accent);opacity:0}
+.ab4.play .plus{animation:floatUp .9s ease .3s both}
+.ab4 .cwr{position:relative}
+
+/* ===== J. FAVORITE ===== */
+.fv .hwr{position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center}
+.fv svg{width:46px;height:46px}
+.fv1 .ring{position:absolute;inset:-6px;border:3px solid var(--accent);border-radius:50%;opacity:0}
+.fv1.play svg{animation:heartBeat .6s var(--spring) both}
+.fv1.play .ring{animation:ringOut .6s ease-out .15s both}
+.fv2.play svg{animation:dblPulse 1.1s ease both}
+.fv3.play svg{animation:heartBeat .55s var(--spring) both}
+.fv3 .pcs{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.fv3 .pcs i{position:absolute;width:11px;height:11px;opacity:0}
+.fv3 .pcs svg{width:11px;height:11px}
+.fv3.play .pcs i{animation:burst .7s ease-out .15s both}
+.fv4 .fillL{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;clip-path:inset(100% 0 0 0)}
+.fv4.play .fillL{animation:fillClip .7s ease .1s both}
+
+/* ===== K. TRANSITIONS ===== */
+.tr .pane{position:absolute;inset:14px 28px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:14px;color:var(--primary);transition:background .4s}
+section.alt .tr .pane{background:var(--bg)}
+.tr1 .circ{position:absolute;width:300px;height:300px;border-radius:50%;background:var(--primary)}
+.tr1.play .circ{animation:bloom .65s var(--spring) both}
+.tr1 .pane{background:transparent;box-shadow:none;color:var(--on-primary);opacity:0;z-index:2}
+.tr1.play .pane{animation:fadeUp .4s ease .5s both}
+.tr2.play .pane{animation:slideSpr .65s var(--spring) both}
+.tr3.play .pane{animation:fadeUp .55s ease both}
+.tr4 .wipe{position:absolute;top:-20%;bottom:-20%;left:0;width:70%;background:var(--primary);border-radius:40px;display:flex;align-items:center;justify-content:center}
+.tr4 .wipe svg{width:40px;height:40px}
+.tr4.play .wipe{animation:wipeL 1s ease-in-out both}
+.tr4 .pane{opacity:0}
+.tr4.play .pane{animation:fadeUp .4s ease .55s both}
+
+/* ===== L. LOADERS ===== */
+.ld1 svg{width:46px;height:46px;animation:spinL 1.1s var(--spring) infinite;transform-origin:50% 55%}
+.ld2 .ring{width:40px;height:40px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--primary);animation:spinL 1s linear infinite}
+.ld3{display:flex;gap:8px}
+.ld3 i{width:12px;height:12px;border-radius:50%;background:var(--primary);animation:dotB 1.2s ease infinite}
+.ld3 i:nth-child(2){background:var(--accent);animation-delay:.15s}
+.ld3 i:nth-child(3){background:var(--highlight);animation-delay:.3s}
+.ld4{width:74%;display:flex;flex-direction:column;gap:9px}
+.ld4 i{height:12px;border-radius:7px;background:linear-gradient(90deg,var(--line) 25%,var(--surface) 50%,var(--line) 75%);background-size:200px 100%;animation:shimmer 1.3s linear infinite}
+.ld4 i:first-child{width:58%;height:38px;border-radius:11px}
+.ld5 .bk{position:relative;width:56px;height:50px}
+.ld5 .fillB{position:absolute;left:9px;right:9px;bottom:7px;background:var(--highlight);border-radius:3px;height:6%;animation:fillGrow 1.4s ease-in-out infinite alternate}
+.ld5 svg{position:relative;width:56px;height:50px;z-index:2}
+
+/* ===== selection bar/panel ===== */
+.selbar{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--ink);color:var(--bg);transition:background .4s}
+.selbar-in{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:13px 22px}
+.selbar .cnt{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15.5px}
+.selbar .cnt b{color:var(--highlight)}
+.selbar button{border:none;border-radius:999px;font-weight:800;font-size:12.5px;padding:8px 16px}
+.selbar .view{background:var(--highlight);color:var(--on-highlight);margin-left:auto}
+.selbar .clear{background:transparent;color:var(--bg);border:1.5px solid rgba(255,255,255,.35)}
+.panel{position:fixed;left:0;right:0;bottom:58px;z-index:79;max-height:52vh;overflow:auto;background:var(--surface);border-top:2px solid var(--line);transform:translateY(110%);transition:transform .35s var(--spring),background .4s;box-shadow:0 -10px 40px rgba(0,0,0,.18)}
+.panel.open{transform:translateY(0)}
+.panel-in{max-width:1160px;margin:0 auto;padding:22px}
+.panel h3{font-family:'Baloo 2',sans-serif;font-size:19px;color:var(--primary);margin-bottom:12px}
+.prow{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.prow:last-child{border:none}
+.prow b{min-width:170px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.prow .val{font-weight:700}
+.prow .val.todo{color:var(--muted);font-weight:600;font-style:italic}
+.prow .ok{margin-left:auto;color:var(--primary);font-weight:800}
+
+@media(max-width:640px){
+  .bar-in{gap:8px}.chip span.nm{display:none}
+  section{padding:48px 0}
+  .vgrid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .vs{height:132px}
+}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="bar-logo">
+      <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".8"/></svg>
+      digrocer<span class="dot">.</span>
+    </div>
+    <div class="chips" id="paletteChips" role="group" aria-label="Palette switcher"></div>
+    <button class="sel-count" id="selCountTop" onclick="togglePanel()">0 / 13 decided</button>
+  </div>
+</div>
+
+<header class="hero wrap">
+  <h1>comparison lab<span class="dot">.</span></h1>
+  <p class="tag">every decision, 3–5 contenders side by side — pick one per group</p>
+  <div class="how"><b>How it works:</b> each section is one decision with lettered options (A, B, C…). Tap an option to <b>pick it</b> — it replaces your previous pick in that group, and animated options replay on every tap. The bottom panel tracks all 13 decisions, including unmade ones. Palettes up top still restyle everything live.</div>
+</header>
+
+<!-- ============ 01 LOGO INTRO ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker">decision 01 · logo intro animation</span>
+      <h2>How the Sprout-d arrives</h2>
+      <p>The animation that plays on app launch and success moments. Tap to replay & pick.</p>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Logo intro" data-n="A — Draw & sprout" tabindex="0"><span class="opt">A</span>
+        <div class="vs lg la1 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle class="bowl p-b" cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path class="lfA p-l" d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path class="lfB p-l" d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg>
+        </div>
+        <div class="vc"><h4>Draw & sprout</h4><p>Bowl draws itself, leaves spring open. Crafted, calm.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Logo intro" data-n="B — Drop & bounce" tabindex="0"><span class="opt">B</span>
+        <div class="vs lg la2 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg>
+        </div>
+        <div class="vc"><h4>Drop & bounce</h4><p>The whole mark drops in like produce landing in a bag. Playful.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Logo intro" data-n="C — Spin in" tabindex="0"><span class="opt">C</span>
+        <div class="vs lg la3 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg>
+        </div>
+        <div class="vc"><h4>Spin in</h4><p>Mark twirls into place with overshoot. Energetic, app-y.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Logo intro" data-n="D — Stem rise (grow sequence)" tabindex="0"><span class="opt">D</span>
+        <div class="vs lg la4 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle class="bwl p-b" cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect class="stm p-s" x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path class="lfA p-l" d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path class="lfB p-l" d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg>
+        </div>
+        <div class="vc"><h4>Stem rise</h4><p>Stem grows up, bowl pops, leaves unfurl — literally sprouting. Most on-story.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 WORDMARK ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker g">decision 02 · wordmark</span>
+      <h2>How "digrocer" is written</h2>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Wordmark" data-n="A — Rounded + accent dot" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><span class="wmk w1">digrocer<span class="dot">.</span></span></div>
+        <div class="vc"><h4>Rounded + dot</h4><p>Baloo lowercase, tomato full stop. Friendly and confident.</p></div>
+      </div>
+      <div class="v" data-g="Wordmark" data-n="B — Leaf dotting the i" tabindex="0"><span class="opt">B</span>
+        <div class="vs"><span class="wmk w2">d<span class="ip">ı<svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--accent)"/></svg></span>grocer<span class="dot">.</span></span></div>
+        <div class="vc"><h4>Leaf on the i</h4><p>The leaf replaces the i's dot — logo and wordmark become one system.</p></div>
+      </div>
+      <div class="v" data-g="Wordmark" data-n="C — Soft serif" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><span class="wmk w3">digrocer<span class="dot">.</span></span></div>
+        <div class="vc"><h4>Soft serif</h4><p>Fraunces — bakery-sign warmth, premium-local.</p></div>
+      </div>
+      <div class="v" data-g="Wordmark" data-n="D — Clean geometric" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><span class="wmk w4">digrocer<span class="dot">.</span></span></div>
+        <div class="vc"><h4>Clean geometric</h4><p>DM Sans bold — most neutral and app-native, least warm.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 APP ICON ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker y">decision 03 · app icon</span>
+      <h2>The home-screen face</h2>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="App icon" data-n="A — Cream mark on green" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><div class="aic" style="background:var(--primary)"><svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--on-primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--on-primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--on-primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--highlight)"/></svg></div></div>
+        <div class="vc"><h4>On green</h4><p>The trusted default — calm and grocery-true.</p></div>
+      </div>
+      <div class="v" data-g="App icon" data-n="B — Green mark on light" tabindex="0"><span class="opt">B</span>
+        <div class="vs dk"><div class="aic" style="background:var(--surface)"><svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg></div></div>
+        <div class="vc"><h4>On light</h4><p>Crisp on any wallpaper, airy and clean.</p></div>
+      </div>
+      <div class="v" data-g="App icon" data-n="C — Cream mark on tomato" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><div class="aic" style="background:var(--accent)"><svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--on-accent)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--on-accent)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--on-accent)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--highlight)"/></svg></div></div>
+        <div class="vc"><h4>On tomato</h4><p>Loudest on the home screen — appetite-first.</p></div>
+      </div>
+      <div class="v" data-g="App icon" data-n="D — Leaf solo on highlight" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><div class="aic" style="background:var(--highlight)"><svg viewBox="0 0 120 120" fill="none"><path d="M24 96 q6 -56 64 -64 q0 56 -64 64z" fill="var(--on-highlight)"/><path d="M40 80 q18 -22 40 -40" stroke="var(--highlight)" stroke-width="6" stroke-linecap="round"/></svg></div></div>
+        <div class="vc"><h4>Leaf solo</h4><p>Just the leaf — minimal, fresh, very iconic at small size.</p></div>
+      </div>
+      <div class="v" data-g="App icon" data-n="E — Dark mode icon" tabindex="0"><span class="opt">E</span>
+        <div class="vs"><div class="aic" style="background:var(--ink)"><svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--highlight)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--highlight)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--highlight)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)"/></svg></div></div>
+        <div class="vc"><h4>Night icon</h4><p>Premium dark version — pairs with Evening Delivery mode.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 SPLASH ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker">decision 04 · splash screen</span>
+      <h2>The first three seconds</h2>
+      <p>Tap a phone to replay & pick.</p>
+    </div>
+    <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(185px,1fr))">
+      <div class="v" data-g="Splash" data-n="A — Green logo bloom" tabindex="0"><span class="opt">A</span>
+        <div class="vs" style="height:auto;padding:18px 0"><div class="mini spl1 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--on-primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--on-primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--on-primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--highlight)"/></svg>
+          <div class="mwm">digrocer<span style="color:var(--highlight)">.</span></div>
+        </div></div>
+        <div class="vc"><h4>Green bloom</h4><p>Brand-color takeover, mark pops, name fades up.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Splash" data-n="B — Dark circle reveal" tabindex="0"><span class="opt">B</span>
+        <div class="vs" style="height:auto;padding:18px 0"><div class="mini spl2 play anim">
+          <div class="circ"></div>
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--on-primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--on-primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--on-primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--highlight)"/></svg>
+          <div class="mwm">digrocer<span style="color:var(--highlight)">.</span></div>
+        </div></div>
+        <div class="vc"><h4>Circle reveal</h4><p>Green blooms out of darkness — cinematic, premium.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Splash" data-n="C — Light minimal spin" tabindex="0"><span class="opt">C</span>
+        <div class="vs" style="height:auto;padding:18px 0"><div class="mini spl3 play anim">
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="var(--primary)" stroke-width="13" fill="none"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="var(--primary)"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="var(--primary)"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="var(--accent)" opacity=".85"/></svg>
+          <div class="mwm" style="color:var(--primary)">digrocer<span style="color:var(--accent)">.</span></div>
+          <div class="tgl3">the corner shop, in your pocket</div>
+        </div></div>
+        <div class="vc"><h4>Light minimal</h4><p>Paper-white, quiet spin-in, tagline whisper. Calm.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 PRICE TAG ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker g">decision 05 · price style</span>
+      <h2>How GH₵ shows up</h2>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Price style" data-n="A — Tag shape" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><span class="pt1">GH₵ 24.00</span></div>
+        <div class="vc"><h4>Tag shape</h4><p>The classic swing-tag silhouette. Most "shop".</p></div>
+      </div>
+      <div class="v" data-g="Price style" data-n="B — Rotated sticker" tabindex="0"><span class="opt">B</span>
+        <div class="vs"><span class="pt2">GH₵ 24.00</span></div>
+        <div class="vc"><h4>Sticker</h4><p>Hand-slapped, slightly rotated — energetic, deal-flavored.</p></div>
+      </div>
+      <div class="v" data-g="Price style" data-n="C — Big type, small currency" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><span class="pt3"><sup>GH₵</sup>24.00</span></div>
+        <div class="vc"><h4>Type-led</h4><p>No container, just confident type. Cleanest in dense lists.</p></div>
+      </div>
+      <div class="v" data-g="Price style" data-n="D — Solid pill" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><span class="pt4">GH₵ 24.00</span></div>
+        <div class="vc"><h4>Solid pill</h4><p>Matches the button language — very app-native.</p></div>
+      </div>
+      <div class="v" data-g="Price style" data-n="E — Chalk underline" tabindex="0"><span class="opt">E</span>
+        <div class="vs"><span class="pt5">GH₵ 24.00<svg viewBox="0 0 120 10" fill="none"><path d="M2 6 q30 -7 58 0 q30 6 58 -2" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>
+        <div class="vc"><h4>Chalkboard</h4><p>Hand-underlined serif — the market-stall special.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 BUTTONS ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker y">decision 06 · button style</span>
+      <h2>The shape of every tap</h2>
+      <p>Press and hold each one to feel it.</p>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Button style" data-n="A — Full pill" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><button class="bt bt1" tabindex="-1">add to basket</button></div>
+        <div class="vc"><h4>Full pill</h4><p>Soft, friendly, the modern default.</p></div>
+      </div>
+      <div class="v" data-g="Button style" data-n="B — Soft rectangle" tabindex="0"><span class="opt">B</span>
+        <div class="vs"><button class="bt bt2" tabindex="-1">add to basket</button></div>
+        <div class="vc"><h4>Soft rectangle</h4><p>Slightly more serious — easier to stack in forms.</p></div>
+      </div>
+      <div class="v" data-g="Button style" data-n="C — Outline pill" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><button class="bt bt3" tabindex="-1">add to basket</button></div>
+        <div class="vc"><h4>Outline</h4><p>Light-touch — works as the secondary everywhere.</p></div>
+      </div>
+      <div class="v" data-g="Button style" data-n="D — Sticker shadow" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><button class="bt bt4" tabindex="-1">add to basket</button></div>
+        <div class="vc"><h4>Sticker shadow</h4><p>Hard offset shadow that physically presses down. Most character.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 PRODUCT CARD ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker">decision 07 · product card</span>
+      <h2>The shelf unit of the app</h2>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Product card" data-n="A — Soft filled card" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><div class="pc pc1"><div class="im">🥑</div><h6>Avocados ×3</h6><div class="pr">GH₵ 24.00</div><button class="ad" tabindex="-1">+</button></div></div>
+        <div class="vc"><h4>Soft filled</h4><p>Cozy tinted card — the warmest option.</p></div>
+      </div>
+      <div class="v" data-g="Product card" data-n="B — Flat with divider" tabindex="0"><span class="opt">B</span>
+        <div class="vs"><div class="pc pc2"><div class="im">🥑</div><h6>Avocados ×3</h6><div class="pr">GH₵ 24.00</div><button class="ad" tabindex="-1">+</button></div></div>
+        <div class="vc"><h4>Flat + dashed</h4><p>No box, just a dashed rule — airy, editorial.</p></div>
+      </div>
+      <div class="v" data-g="Product card" data-n="C — Outlined card" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><div class="pc pc3"><div class="im">🥑</div><h6>Avocados ×3</h6><div class="pr">GH₵ 24.00</div><button class="ad" tabindex="-1">+</button></div></div>
+        <div class="vc"><h4>Outlined</h4><p>Crisp border — strongest separation in busy grids.</p></div>
+      </div>
+      <div class="v" data-g="Product card" data-n="D — Image-led floating add" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><div class="pc pc4"><div class="im">🥑</div><button class="ad" tabindex="-1">+</button><div class="meta"><h6>Avocados ×3</h6><div class="pr">GH₵ 24.00</div></div></div></div>
+        <div class="vc"><h4>Image-led</h4><p>Big photo, floating add button — most appetite per pixel.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 BOTTOM NAV ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker g">decision 08 · bottom navigation</span>
+      <h2>How you move around the shop</h2>
+    </div>
+    <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+      <div class="v" data-g="Bottom nav" data-n="A — Icons + labels" tabindex="0"><span class="opt">A</span>
+        <div class="vs"><div class="nv">
+          <div class="on"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 L12 4 L20 11 V20 H4 Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>shop</div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2.2"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>search</div>
+          <div><svg viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="currentColor" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="currentColor" stroke-width="2.2"/></svg>basket</div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="2.2"/><path d="M5 20 a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>you</div>
+        </div></div>
+        <div class="vc"><h4>Icons + labels</h4><p>Clearest for everyone — never makes the user guess.</p></div>
+      </div>
+      <div class="v" data-g="Bottom nav" data-n="B — Icons with active pill" tabindex="0"><span class="opt">B</span>
+        <div class="vs"><div class="nv nv2">
+          <div class="on"><span class="pill"></span><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 L12 4 L20 11 V20 H4 Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2.2"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="currentColor" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="currentColor" stroke-width="2.2"/></svg></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="2.2"/><path d="M5 20 a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        </div></div>
+        <div class="vc"><h4>Active pill</h4><p>Icons only with a highlight pill gliding behind the active tab.</p></div>
+      </div>
+      <div class="v" data-g="Bottom nav" data-n="C — Floating dock + basket FAB" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><div class="nv nv3">
+          <div class="on"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 L12 4 L20 11 V20 H4 Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2.2"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+          <div><span class="fabC"><svg viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="currentColor" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="currentColor" stroke-width="2.2"/></svg></span></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" stroke="currentColor" stroke-width="2"/></svg></div>
+          <div><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="2.2"/><path d="M5 20 a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        </div></div>
+        <div class="vc"><h4>Floating dock</h4><p>Rounded dock with the basket raised as a center FAB — basket is the hero.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 ADD TO BASKET ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker">decision 09 · add-to-basket motion</span>
+      <h2>The most-felt moment in the app</h2>
+      <p>Tap to replay & pick.</p>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Add-to-basket" data-n="A — Fly to basket" tabindex="0"><span class="opt">A</span>
+        <div class="vs ab ab1 play anim">
+          <div class="dotp"></div>
+          <div class="cartT"><svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="var(--primary)" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="var(--primary)" stroke-width="2.2"/></svg></div>
+        </div>
+        <div class="vc"><h4>Fly to basket</h4><p>Product arcs across the screen into the basket icon.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Add-to-basket" data-n="B — Drop & dip" tabindex="0"><span class="opt">B</span>
+        <div class="vs ab ab2 play anim">
+          <svg width="96" height="92" viewBox="0 0 120 110" fill="none"><circle class="itm" cx="60" cy="26" r="11" fill="var(--accent)"/><g class="bsk"><path d="M28 46 h64 l-8 48 a8 8 0 0 1 -8 7 h-32 a8 8 0 0 1 -8 -7 z" fill="var(--primary)"/><path d="M42 46 v-7 a18 18 0 0 1 36 0 v7" stroke="var(--primary)" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M38 62 h44 M40 76 h40" stroke="var(--surface)" stroke-width="3.5" stroke-linecap="round" opacity=".55"/></g></svg>
+        </div>
+        <div class="vc"><h4>Drop & dip</h4><p>Item falls in, basket dips and recovers — weighty and tactile.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Add-to-basket" data-n="C — Button morph to check" tabindex="0"><span class="opt">C</span>
+        <div class="vs ab3 play anim"><div class="mwrap"><button class="mbtn" tabindex="-1"><span class="lb">add to basket</span><span class="ck">✓</span></button></div></div>
+        <div class="vc"><h4>Button morph</h4><p>The button itself shrinks into a ✓ — confirmation lives where you tapped.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Add-to-basket" data-n="D — Badge ping +1" tabindex="0"><span class="opt">D</span>
+        <div class="vs ab4 play anim"><div class="cwr">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="var(--primary)" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="var(--primary)" stroke-width="2.2"/></svg>
+          <span class="bdg">3</span><span class="plus">+1</span>
+        </div></div>
+        <div class="vc"><h4>Badge ping</h4><p>Quietest option — the basket badge pops and a +1 floats away.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 FAVORITE ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker g">decision 10 · favorite motion</span>
+      <h2>How saving feels</h2>
+      <p>Tap to replay & pick.</p>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Favorite" data-n="A — Pop + ring burst" tabindex="0"><span class="opt">A</span>
+        <div class="vs fv fv1 play anim"><div class="hwr"><div class="ring"></div><svg viewBox="0 0 24 24"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" fill="var(--accent)"/></svg></div></div>
+        <div class="vc"><h4>Pop + ring</h4><p>Heart overshoots with a ring shockwave. The crowd-pleaser.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Favorite" data-n="B — Double heartbeat" tabindex="0"><span class="opt">B</span>
+        <div class="vs fv fv2 play anim"><div class="hwr"><svg viewBox="0 0 24 24"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" fill="var(--accent)"/></svg></div></div>
+        <div class="vc"><h4>Heartbeat</h4><p>Two real pulses, like a heartbeat — warm and human.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Favorite" data-n="C — Leaf burst" tabindex="0"><span class="opt">C</span>
+        <div class="vs fv fv3 play anim"><div class="hwr">
+          <svg viewBox="0 0 24 24"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" fill="var(--accent)"/></svg>
+          <span class="pcs">
+            <i style="--tx:-34px;--ty:-26px;--rr:140deg"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--primary)"/></svg></i>
+            <i style="--tx:36px;--ty:-22px;--rr:-160deg"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--highlight)"/></svg></i>
+            <i style="--tx:-30px;--ty:24px;--rr:200deg"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--highlight)"/></svg></i>
+            <i style="--tx:32px;--ty:26px;--rr:-200deg"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--primary)"/></svg></i>
+          </span>
+        </div></div>
+        <div class="vc"><h4>Leaf burst</h4><p>Leaves scatter instead of sparkles — only digrocer does this.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Favorite" data-n="D — Fill from bottom" tabindex="0"><span class="opt">D</span>
+        <div class="vs fv fv4 play anim"><div class="hwr">
+          <svg viewBox="0 0 24 24"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>
+          <span class="fillL"><svg viewBox="0 0 24 24"><path d="M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z" fill="var(--accent)"/></svg></span>
+        </div></div>
+        <div class="vc"><h4>Fill up</h4><p>The outline heart fills like pouring — slow-burn satisfying.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 TRANSITIONS ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker y">decision 11 · screen transition</span>
+      <h2>How screens change</h2>
+      <p>Tap to replay & pick.</p>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Transition" data-n="A — Bloom reveal" tabindex="0"><span class="opt">A</span>
+        <div class="vs tr tr1 play anim"><div class="circ"></div><div class="pane">good evening</div></div>
+        <div class="vc"><h4>Bloom reveal</h4><p>A circle blooms from the tap point. Most on-brand.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Transition" data-n="B — Slide & settle" tabindex="0"><span class="opt">B</span>
+        <div class="vs tr tr2 play anim"><div class="pane">good evening</div></div>
+        <div class="vc"><h4>Slide & settle</h4><p>New screen slides in and overshoots slightly. Familiar, fast.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Transition" data-n="C — Fade up" tabindex="0"><span class="opt">C</span>
+        <div class="vs tr tr3 play anim"><div class="pane">good evening</div></div>
+        <div class="vc"><h4>Fade up</h4><p>Gentle rise + fade. Calmest and least distracting.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+      <div class="v" data-g="Transition" data-n="D — Leaf wipe" tabindex="0"><span class="opt">D</span>
+        <div class="vs tr tr4 play anim">
+          <div class="wipe"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--highlight)"/></svg></div>
+          <div class="pane">good evening</div>
+        </div>
+        <div class="vc"><h4>Leaf wipe</h4><p>A green wave with a leaf sweeps across. Boldest signature.</p><div class="replay-hint">tap to replay</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 LOADERS ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sticker">decision 12 · loading style</span>
+      <h2>The wait, made pleasant</h2>
+    </div>
+    <div class="vgrid">
+      <div class="v" data-g="Loader" data-n="A — Spinning leaf" tabindex="0"><span class="opt">A</span>
+        <div class="vs ld1"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--primary)"/><path d="M8 16 q5 -6 10 -10" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <div class="vc"><h4>Spinning leaf</h4><p>The leaf twirls on the spring curve — branded down to the spinner.</p></div>
+      </div>
+      <div class="v" data-g="Loader" data-n="B — Ring spinner" tabindex="0"><span class="opt">B</span>
+        <div class="vs ld2"><div class="ring"></div></div>
+        <div class="vc"><h4>Ring</h4><p>The universal spinner in brand green. Invisible in a good way.</p></div>
+      </div>
+      <div class="v" data-g="Loader" data-n="C — Tricolor dots" tabindex="0"><span class="opt">C</span>
+        <div class="vs"><div class="ld3"><i></i><i></i><i></i></div></div>
+        <div class="vc"><h4>Tricolor dots</h4><p>Green, tomato, butter bouncing in sequence — playful.</p></div>
+      </div>
+      <div class="v" data-g="Loader" data-n="D — Skeleton shimmer" tabindex="0"><span class="opt">D</span>
+        <div class="vs"><div class="ld4"><i></i><i></i><i></i></div></div>
+        <div class="vc"><h4>Skeleton</h4><p>Content shapes shimmer in — best for lists and feeds.</p></div>
+      </div>
+      <div class="v" data-g="Loader" data-n="E — Basket filling" tabindex="0"><span class="opt">E</span>
+        <div class="vs ld5"><div class="bk">
+          <div class="fillB"></div>
+          <svg viewBox="0 0 120 110" fill="none"><path d="M28 46 h64 l-8 48 a8 8 0 0 1 -8 7 h-32 a8 8 0 0 1 -8 -7 z" stroke="var(--primary)" stroke-width="8" fill="none"/><path d="M42 46 v-7 a18 18 0 0 1 36 0 v7" stroke="var(--primary)" stroke-width="8" stroke-linecap="round" fill="none"/></svg>
+        </div></div>
+        <div class="vc"><h4>Basket filling</h4><p>The basket fills with butter-yellow — loading as shopping.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ selection panel ============ -->
+<div class="panel" id="panel" aria-hidden="true">
+  <div class="panel-in">
+    <h3>your 13 decisions</h3>
+    <div id="panelBody"></div>
+  </div>
+</div>
+<div class="selbar">
+  <div class="selbar-in">
+    <span class="cnt"><b id="selCount">0</b> / 13 decided</span>
+    <button class="clear" onclick="clearSel()">Reset</button>
+    <button class="view" onclick="togglePanel()">View decisions</button>
+  </div>
+</div>
+
+<script>
+const palettes = {
+  market:{name:'Market Classic',t:{'--bg':'#F7EFDF','--surface':'#FFFDF7','--ink':'#22271F','--muted':'#6F7466','--line':'rgba(34,39,31,.14)','--primary':'#1F5130','--on-primary':'#FFFDF7','--accent':'#E0452B','--on-accent':'#FFFDF7','--highlight':'#F5C84C','--on-highlight':'#22271F','--shadow':'0 3px 16px rgba(34,39,31,.08)'}},
+  citrus:{name:'Citrus Morning',t:{'--bg':'#FFF4E0','--surface':'#FFFCF4','--ink':'#2C2316','--muted':'#8A7A5E','--line':'rgba(44,35,22,.14)','--primary':'#E8731A','--on-primary':'#FFFCF4','--accent':'#2E6B3E','--on-accent':'#FFFCF4','--highlight':'#FFD166','--on-highlight':'#2C2316','--shadow':'0 3px 16px rgba(120,80,20,.10)'}},
+  beet:{name:'Beet & Cream',t:{'--bg':'#F7EDEA','--surface':'#FFFAF7','--ink':'#2E2026','--muted':'#8A7078','--line':'rgba(46,32,38,.14)','--primary':'#6E2B4B','--on-primary':'#FFF7F2','--accent':'#C75146','--on-accent':'#FFF7F2','--highlight':'#F2C57C','--on-highlight':'#2E2026','--shadow':'0 3px 16px rgba(110,43,75,.10)'}},
+  evening:{name:'Evening Delivery',t:{'--bg':'#121D16','--surface':'#1C2B21','--ink':'#F4EEDF','--muted':'#A9B3A2','--line':'rgba(244,238,223,.18)','--primary':'#E9C24A','--on-primary':'#1B2A20','--accent':'#E05842','--on-accent':'#FFF6EA','--highlight':'#7FB069','--on-highlight':'#121D16','--shadow':'0 4px 20px rgba(0,0,0,.35)'}},
+  olive:{name:'Olive Mediterranean',t:{'--bg':'#F2EFE0','--surface':'#FBF9EE','--ink':'#2A2B1F','--muted':'#7E8068','--line':'rgba(42,43,31,.14)','--primary':'#5A6638','--on-primary':'#FBF9EE','--accent':'#C26E3D','--on-accent':'#FFF8EF','--highlight':'#E3D26F','--on-highlight':'#2A2B1F','--shadow':'0 3px 16px rgba(60,62,40,.10)'}}
+};
+const groups=['Palette','Logo intro','Wordmark','App icon','Splash','Price style','Button style','Product card','Bottom nav','Add-to-basket','Favorite','Transition','Loader'];
+const state={palette:'market',sel:new Map()};
+const root=document.documentElement;
+
+function applyPalette(key){
+  const p=palettes[key];if(!p)return;
+  state.palette=key;
+  for(const [k,v] of Object.entries(p.t))root.style.setProperty(k,v);
+  document.querySelectorAll('#paletteChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.key===key));
+  state.sel.set('Palette',p.name);
+  renderSel();
+}
+(function(){
+  const chips=document.getElementById('paletteChips');
+  for(const [key,p] of Object.entries(palettes)){
+    const ch=document.createElement('button');
+    ch.className='chip';ch.dataset.key=key;
+    ch.innerHTML='<span class="dots"><i style="background:'+p.t['--primary']+'"></i><i style="background:'+p.t['--accent']+'"></i><i style="background:'+p.t['--highlight']+'"></i></span><span class="nm">'+p.name+'</span>';
+    ch.onclick=()=>applyPalette(key);
+    chips.appendChild(ch);
+  }
+})();
+
+/* variant cards: single-select per group, replay anims on tap */
+document.querySelectorAll('.v[data-g]').forEach(card=>{
+  card.setAttribute('role','button');
+  card.setAttribute('aria-label',card.dataset.g+' option: '+card.dataset.n);
+  const act=()=>{
+    const g=card.dataset.g;
+    document.querySelectorAll('.v[data-g="'+g+'"]').forEach(s=>s.classList.remove('selected'));
+    card.classList.add('selected');
+    state.sel.set(g,card.dataset.n);
+    const st=card.querySelector('.anim');
+    if(st){st.classList.remove('play');void st.offsetWidth;st.classList.add('play');}
+    renderSel();
+  };
+  card.addEventListener('click',act);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});
+});
+
+function renderSel(){
+  let n=0;groups.forEach(g=>{if(state.sel.has(g))n++;});
+  document.getElementById('selCount').textContent=n;
+  document.getElementById('selCountTop').textContent=n+' / '+groups.length+' decided';
+  let h='';
+  groups.forEach(g=>{
+    const v=state.sel.get(g);
+    h+='<div class="prow"><b>'+g+'</b>'+(v?'<span class="val">'+v+'</span><span class="ok">✓</span>':'<span class="val todo">not decided yet</span>')+'</div>';
+  });
+  document.getElementById('panelBody').innerHTML=h;
+}
+function clearSel(){
+  state.sel.clear();
+  document.querySelectorAll('.v.selected').forEach(c=>c.classList.remove('selected'));
+  state.sel.set('Palette',palettes[state.palette].name);
+  renderSel();
+}
+function togglePanel(){
+  const p=document.getElementById('panel');
+  const open=p.classList.toggle('open');
+  p.setAttribute('aria-hidden',!open);
+}
+applyPalette('market');
+</script>
+<script>
+/* =====================================================================
+   BRAND-CONCEPT ADDON — appended after the untouched v4 lab.
+   Adds four new decisions:
+     13 · particle effect      (the five systems from particle lab v5)
+     14 · logo from particles  (entrances AND exits, built from dust)
+     15 · particle moments     (wordmark / basket / heart / check)
+     16 · liquid glass         (iOS-27 feel with a graceful fallback)
+   Nothing above this block was modified.
+===================================================================== */
+(function(){
+'use strict';
+
+/* ---------- addon styles (injected, v4 stylesheet untouched) ---------- */
+var css=[
+'.pnew .vs.pstage{height:225px}',
+'.pnew canvas.pfx{position:absolute;inset:0;width:100%;height:100%;display:block}',
+'.pnew .use{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-top:6px}',
+'.pnew .use b{color:var(--primary)}',
+'.pnew .v:active{transform:translateY(-1px) scale(.985)}',
+'section.alt .vs.dk{background:var(--ink)}',
+'section.alt .vs.gr{background:var(--primary)}',
+/* --- liquid glass: solid fallback first, real glass when supported --- */
+'.glass{position:relative;overflow:hidden;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.5);box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.6)}',
+'@supports ((-webkit-backdrop-filter:blur(2px)) or (backdrop-filter:blur(2px))){.glass{background:rgba(255,255,255,.17);-webkit-backdrop-filter:blur(18px) saturate(1.8);backdrop-filter:blur(18px) saturate(1.8)}}',
+'.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.45),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 68%,rgba(255,255,255,.22));pointer-events:none}',
+'.noglass .glass{background:rgba(255,255,255,.93)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}',
+'.gdock{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:18px;padding:13px 18px;border-radius:999px;color:var(--bg)}',
+'.gdock svg{width:20px;height:20px;display:block;position:relative;z-index:1}',
+'.gpill{position:absolute;top:7px;bottom:7px;left:7px;width:42px;border-radius:999px;background:rgba(255,255,255,.3);animation:glideDock 5.5s ease-in-out infinite}',
+'@keyframes glideDock{0%,16%{left:7px}28%,41%{left:45px}53%,66%{left:83px}78%,94%{left:121px}100%{left:7px}}',
+'.gphone{width:148px;height:296px;border-radius:24px;border:5px solid #20231E;overflow:hidden;position:relative;background:var(--ink);margin:0 auto}',
+'.gsheet{position:absolute;left:7px;right:7px;bottom:7px;border-radius:18px;padding:12px 12px 13px;transform:translateY(140%);color:var(--bg);text-align:left}',
+'.play .gsheet{animation:sheetUp .8s var(--spring) .15s both}',
+'@keyframes sheetUp{0%{transform:translateY(140%)}100%{transform:translateY(0)}}',
+'.grb{width:34px;height:4px;border-radius:99px;background:rgba(255,255,255,.45);margin:0 auto 9px}',
+'.gck{margin-top:10px;width:100%;border:none;border-radius:999px;padding:8px 0;font-weight:800;font-size:11px;background:var(--highlight);color:var(--on-highlight)}',
+'.gtoast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);border-radius:999px;padding:12px 20px;display:flex;align-items:center;gap:9px;font-weight:800;font-size:13px;color:var(--bg);white-space:nowrap}',
+'.play .gtoast{animation:toastIn .65s var(--spring) .5s both}',
+'@keyframes toastIn{0%{transform:translate(-50%,-50%) scale(0)}100%{transform:translate(-50%,-50%) scale(1)}}',
+'.gtoast svg{width:16px;height:16px}',
+'.fnote{position:absolute;top:12px;left:14px;right:14px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bg);opacity:.7;text-align:left;z-index:2}',
+/* scroll-driven entrance — newest engines only, harmless elsewhere */
+'@supports (animation-timeline: view()){.pnew .v{animation:cardRise both;animation-timeline:view();animation-range:entry 0% entry 55%}}',
+'@keyframes cardRise{from{opacity:.1;filter:blur(7px)}to{opacity:1;filter:blur(0)}}',
+'@media(max-width:640px){.pnew .vs.pstage{height:200px}}'
+].join('\n');
+var styleEl=document.createElement('style');
+styleEl.id='brandConceptAddon';
+styleEl.textContent=css;
+document.head.appendChild(styleEl);
+
+/* ---------- new sections markup ---------- */
+var html=[
+'<!-- ============ 13 PARTICLE EFFECT (from particle lab v5) ============ -->',
+'<section class="pnew">',
+' <div class="wrap">',
+'  <div class="sec-head">',
+'   <span class="sticker">decision 13 · particle effect</span>',
+'   <h2>The leaf, set in motion</h2>',
+'   <p>Five ambient systems — every effect is built from the leaf. Tap to replay &amp; pick.</p>',
+'  </div>',
+'  <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">',
+'   <div class="v" data-g="Particle effect" data-n="A — Leaf burst" tabindex="0"><span class="opt">A</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="burst"></canvas></div>',
+'    <div class="vc"><h4>Leaf burst</h4><p>An explosion of leaves that rise, catch the air, and flutter down with real sway.</p><div class="use"><b>use:</b> order placed · rewards</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle effect" data-n="B — Falling leaves" tabindex="0"><span class="opt">B</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="drift"></canvas></div>',
+'    <div class="vc"><h4>Falling leaves</h4><p>A calm, endless drift on lazy sine paths. Hypnotic, never busy.</p><div class="use"><b>use:</b> splash ambience · empty states</div><div class="replay-hint">tap to reseed</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle effect" data-n="C — Vortex gather" tabindex="0"><span class="opt">C</span>',
+'    <div class="vs gr pstage"><canvas class="pfx" data-mode="vortex"></canvas></div>',
+'    <div class="vc"><h4>Vortex gather</h4><p>Leaves spiral inward from every edge and vanish into a single pulse.</p><div class="use"><b>use:</b> loading complete · refresh release</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle effect" data-n="D — Pollen glow" tabindex="0"><span class="opt">D</span>',
+'    <div class="vs dk pstage"><canvas class="pfx" data-mode="pollen"></canvas></div>',
+'    <div class="vc"><h4>Pollen glow</h4><p>Tiny golden motes wander and breathe in the dark — the quietest magic.</p><div class="use"><b>use:</b> night splash · premium moments</div><div class="replay-hint">tap to reseed</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle effect" data-n="E — Bloom ripple" tabindex="0"><span class="opt">E</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="ripple"></canvas></div>',
+'    <div class="vc"><h4>Bloom ripple</h4><p>Expanding rings with a crown of leaves gliding outward — a water-drop of foliage.</p><div class="use"><b>use:</b> tap feedback · favourite saved</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'  </div>',
+' </div>',
+'</section>',
+
+'<!-- ============ 14 LOGO FROM PARTICLES ============ -->',
+'<section class="alt pnew">',
+' <div class="wrap">',
+'  <div class="sec-head">',
+'   <span class="sticker g">decision 14 · logo from particles</span>',
+'   <h2>The mark, assembled from dust</h2>',
+'   <p>Hundreds of motes fly in and become the Sprout-d — then leave again. Entrances <i>and</i> exits. Tap to replay &amp; pick.</p>',
+'  </div>',
+'  <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">',
+'   <div class="v" data-g="Logo particles" data-n="A — Assemble &amp; hold" tabindex="0"><span class="opt">A</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="form" data-shape="logo" data-flow="in" data-tone="lt"></canvas></div>',
+'    <div class="vc"><h4>Assemble &amp; hold</h4><p>Particles swarm in from the edges, spring into the mark and settle, breathing softly.</p><div class="use"><b>use:</b> splash entry · app launch</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Logo particles" data-n="B — Breathe &amp; release" tabindex="0"><span class="opt">B</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="form" data-shape="logo" data-flow="cycle" data-tone="lt"></canvas></div>',
+'    <div class="vc"><h4>Breathe &amp; release</h4><p>The full lifecycle — forms, holds a beat, then loosens and drifts away like pollen. Loops.</p><div class="use"><b>use:</b> splash → home handoff</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Logo particles" data-n="C — Exit burst" tabindex="0"><span class="opt">C</span>',
+'    <div class="vs dk pstage"><canvas class="pfx" data-mode="form" data-shape="logo" data-flow="burst" data-tone="dk"></canvas></div>',
+'    <div class="vc"><h4>Exit burst</h4><p>The formed mark holds — then detonates outward, every mote tumbling with gravity. The exit.</p><div class="use"><b>use:</b> sign-out · screen exit</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Logo particles" data-n="D — Spiral in &amp; out" tabindex="0"><span class="opt">D</span>',
+'    <div class="vs gr pstage"><canvas class="pfx" data-mode="form" data-shape="logo" data-flow="swirl" data-tone="gr"></canvas></div>',
+'    <div class="vc"><h4>Spiral in &amp; out</h4><p>Motes orbit inward along shrinking spirals, lock into the mark, then unwind back out.</p><div class="use"><b>use:</b> pull-to-refresh · loading hero</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'  </div>',
+' </div>',
+'</section>',
+
+'<!-- ============ 15 PARTICLE MOMENTS ============ -->',
+'<section class="pnew">',
+' <div class="wrap">',
+'  <div class="sec-head">',
+'   <span class="sticker y">decision 15 · particle moments</span>',
+'   <h2>Not just the logo</h2>',
+'   <p>The same dust forms the things that matter — the wordmark, the basket, the heart, the check. Tap to replay &amp; pick.</p>',
+'  </div>',
+'  <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">',
+'   <div class="v" data-g="Particle moments" data-n="A — Wordmark assembles" tabindex="0"><span class="opt">A</span>',
+'    <div class="vs dk pstage"><canvas class="pfx" data-mode="form" data-shape="word" data-flow="cycle" data-tone="dk"></canvas></div>',
+'    <div class="vc"><h4>Wordmark assembles</h4><p>“digrocer.” writes itself out of particles, holds, then dissolves upward. Loops.</p><div class="use"><b>use:</b> brand splash · about screen</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle moments" data-n="B — Basket gathers" tabindex="0"><span class="opt">B</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="form" data-shape="basket" data-flow="in" data-tone="lt"></canvas></div>',
+'    <div class="vc"><h4>Basket gathers</h4><p>The basket sweeps together from loose motes and stays — a living empty-state.</p><div class="use"><b>use:</b> empty basket state</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle moments" data-n="C — Heart forms &amp; bursts" tabindex="0"><span class="opt">C</span>',
+'    <div class="vs pstage"><canvas class="pfx" data-mode="form" data-shape="heart" data-flow="burst" data-tone="lt"></canvas></div>',
+'    <div class="vc"><h4>Heart forms &amp; bursts</h4><p>A heart snaps together, beats once, then scatters — saved, with feeling. Loops.</p><div class="use"><b>use:</b> favourite saved</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Particle moments" data-n="D — Check spirals in" tabindex="0"><span class="opt">D</span>',
+'    <div class="vs gr pstage"><canvas class="pfx" data-mode="form" data-shape="check" data-flow="swirl" data-tone="gr"></canvas></div>',
+'    <div class="vc"><h4>Check spirals in</h4><p>Motes whirl into a bold ✓ with a ring pulse at lock — then unwind. Loops.</p><div class="use"><b>use:</b> order confirmed</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'  </div>',
+' </div>',
+'</section>',
+
+'<!-- ============ 16 LIQUID GLASS ============ -->',
+'<section class="alt pnew">',
+' <div class="wrap">',
+'  <div class="sec-head">',
+'   <span class="sticker">decision 16 · liquid glass</span>',
+'   <h2>The iOS-27 feel — with a graceful floor</h2>',
+'   <p>Real frosted glass floating over live particles, springy and layered. Phones without backdrop blur automatically get the soft-solid fallback — option D forces it so you can compare what older devices feel.</p>',
+'  </div>',
+'  <div class="vgrid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">',
+'   <div class="v" data-g="Glass &amp; depth" data-n="A — Liquid dock" tabindex="0"><span class="opt">A</span>',
+'    <div class="vs dk pstage"><canvas class="pfx" data-mode="drift"></canvas>',
+'     <div class="gdock glass"><span class="gpill"></span>',
+'      <svg viewBox="0 0 24 24" fill="none"><path d="M4 11 L12 4 L20 11 V20 H4 Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2.2"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="currentColor" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="currentColor" stroke-width="2.2"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="2.2"/><path d="M5 20 a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+'     </div>',
+'    </div>',
+'    <div class="vc"><h4>Liquid dock</h4><p>Frosted nav floating over falling leaves — the pill glides between tabs on its own.</p><div class="use"><b>use:</b> bottom navigation</div></div>',
+'   </div>',
+'   <div class="v" data-g="Glass &amp; depth" data-n="B — Glass sheet" tabindex="0"><span class="opt">B</span>',
+'    <div class="vs pstage anim play" style="height:auto;padding:18px 0">',
+'     <div class="gphone"><canvas class="pfx" data-mode="pollen"></canvas>',
+'      <div class="gsheet glass"><div class="grb"></div><b style="font-size:12px">your basket</b>',
+'       <div style="font-size:10.5px;opacity:.85;margin-top:2px">avocados ×3 · GH₵ 24.00</div>',
+'       <button class="gck" tabindex="-1">checkout · GH₵ 24.00</button>',
+'      </div>',
+'     </div>',
+'    </div>',
+'    <div class="vc"><h4>Glass sheet</h4><p>The basket rises as frosted glass over glowing pollen — content stays alive beneath.</p><div class="use"><b>use:</b> basket sheet · filters</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Glass &amp; depth" data-n="C — Glass toast" tabindex="0"><span class="opt">C</span>',
+'    <div class="vs dk pstage anim play"><canvas class="pfx" data-mode="burst"></canvas>',
+'     <div class="gtoast glass"><svg viewBox="0 0 24 24"><path d="M4 20 q2 -14 16 -16 q0 14 -16 16z" fill="var(--highlight)"/></svg>order placed</div>',
+'    </div>',
+'    <div class="vc"><h4>Glass toast</h4><p>Leaf burst fires, then the confirmation pops in on frosted glass. Layered celebration.</p><div class="use"><b>use:</b> confirmations</div><div class="replay-hint">tap to replay</div></div>',
+'   </div>',
+'   <div class="v" data-g="Glass &amp; depth" data-n="D — Soft-solid fallback" tabindex="0"><span class="opt">D</span>',
+'    <div class="vs dk pstage noglass"><canvas class="pfx" data-mode="drift"></canvas>',
+'     <div class="fnote">forced fallback · what older devices see</div>',
+'     <div class="gdock glass"><span class="gpill"></span>',
+'      <svg viewBox="0 0 24 24" fill="none" style="color:var(--ink)"><path d="M4 11 L12 4 L20 11 V20 H4 Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none" style="color:var(--ink)"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2.2"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none" style="color:var(--ink)"><path d="M5 8 h14 l-1.6 11 a2 2 0 0 1 -2 1.7 H8.6 a2 2 0 0 1 -2 -1.7 Z" stroke="currentColor" stroke-width="2.2"/><path d="M9 8 V7 a3 3 0 0 1 6 0 v1" stroke="currentColor" stroke-width="2.2"/></svg>',
+'      <svg viewBox="0 0 24 24" fill="none" style="color:var(--ink)"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="2.2"/><path d="M5 20 a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+'     </div>',
+'    </div>',
+'    <div class="vc"><h4>Soft-solid fallback</h4><p>Same dock with blur off — still layered, still springy. Older iOS keeps the feel.</p><div class="use"><b>use:</b> iOS ≤15 · older android</div></div>',
+'   </div>',
+'  </div>',
+' </div>',
+'</section>'
+].join('\n');
+
+var panelEl=document.getElementById('panel');
+var holder=document.createElement('div');
+holder.innerHTML=html;
+while(holder.firstChild)panelEl.parentNode.insertBefore(holder.firstChild,panelEl);
+
+/* ---------- register the new decisions with the v4 tracker ---------- */
+groups.push('Particle effect','Logo particles','Particle moments','Glass & depth');
+document.querySelector('.panel h3').textContent='your '+groups.length+' decisions';
+var howEl=document.querySelector('.hero .how');
+if(howEl)howEl.innerHTML=howEl.innerHTML.replace('all 13 decisions','all '+groups.length+' decisions');
+
+/* ---------- particle engine ---------- */
+var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function rnd(a,b){return a+Math.random()*(b-a);}
+function pickA(arr){return arr[(Math.random()*arr.length)|0];}
+function cols(){
+  var cs=getComputedStyle(document.documentElement);
+  function g(n){return cs.getPropertyValue(n).trim();}
+  return {primary:g('--primary'),accent:g('--accent'),highlight:g('--highlight'),
+    onprimary:g('--on-primary'),surface:g('--surface'),ink:g('--ink'),bg:g('--bg')};
+}
+function drawLeaf(ctx,x,y,rot,s,col,a){
+  ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=Math.max(0,Math.min(1,a));
+  ctx.fillStyle=col;ctx.beginPath();
+  ctx.moveTo(-s,s);
+  ctx.quadraticCurveTo(-s*0.8,-s*0.6,s,-s);
+  ctx.quadraticCurveTo(s*0.6,s*0.8,-s,s);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+
+/* ----- ambient systems: burst / drift / vortex / pollen / ripple (v5) ----- */
+function makeAmbient(canvas){
+  var mode=canvas.dataset.mode;
+  var ctx=canvas.getContext('2d');
+  var W=0,H=0,t=0,P=[],R=[];
+  function resize(){
+    var dpr=Math.min(2,window.devicePixelRatio||1);
+    W=canvas.clientWidth;H=canvas.clientHeight;
+    canvas.width=Math.max(1,W*dpr);canvas.height=Math.max(1,H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function brand(){var c=cols();return [c.primary,c.accent,c.highlight];}
+  function spawnBurst(){
+    var c=brand();P=[];R=[];
+    for(var i=0;i<26;i++){
+      var a=rnd(0,Math.PI*2),sp=rnd(2,6);
+      P.push({x:W/2,y:H/2,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.6,
+        rot:rnd(0,6.28),rs:rnd(-.16,.16),s:rnd(5,10),col:pickA(c),
+        life:0,max:rnd(70,110),ph:rnd(0,6.28)});
+    }
+  }
+  function spawnRipple(){
+    var c=brand();P=[];
+    R=[{r:4,a:.5},{r:-22,a:.5},{r:-48,a:.5}];
+    for(var i=0;i<13;i++){
+      var a=(i/13)*Math.PI*2+rnd(-.12,.12);
+      P.push({x:W/2,y:H/2,vx:Math.cos(a)*3.6,vy:Math.sin(a)*3.6,
+        rot:a+1.6,rs:rnd(-.05,.05),s:rnd(4.5,7.5),col:pickA(c),life:0,max:85});
+    }
+  }
+  function spawnVortex(){
+    var c=brand();P=[];R=[];
+    var maxR=Math.max(W,H)*.62;
+    for(var i=0;i<34;i++){
+      P.push({th:rnd(0,6.28),r:rnd(maxR*.75,maxR),s:rnd(4,8),col:pickA(c),
+        a:0,delay:rnd(0,28),dead:false});
+    }
+  }
+  function driftP(c,anyY){
+    return {x:rnd(0,W),y:anyY?rnd(-20,H):rnd(-30,-12),vy:rnd(.3,.85),
+      rot:rnd(0,6.28),rs:rnd(-.018,.018),s:rnd(4,9),col:pickA(c),
+      ph:rnd(0,6.28),f:rnd(.012,.028),amp:rnd(.4,1)};
+  }
+  function seedDrift(){
+    var c=brand();P=[];
+    for(var i=0;i<14;i++)P.push(driftP(c,true));
+  }
+  function seedPollen(){
+    var c=cols();P=[];
+    for(var i=0;i<26;i++){
+      P.push({bx:rnd(8,W-8),by:rnd(8,H-8),s:rnd(1.3,2.9),
+        a:rnd(.01,.022),b:rnd(.008,.018),c2:rnd(.02,.05),
+        p1:rnd(0,6.28),p2:rnd(0,6.28),p3:rnd(0,6.28),tw:0,
+        col:Math.random()<.8?c.highlight:c.onprimary});
+    }
+  }
+  function replay(){
+    resize();t=0;
+    if(mode==='burst')spawnBurst();
+    else if(mode==='ripple')spawnRipple();
+    else if(mode==='vortex')spawnVortex();
+    else if(mode==='drift')seedDrift();
+    else seedPollen();
+    if(reduced){step();draw();}
+  }
+  function step(){
+    t++;
+    var i,p;
+    if(mode==='burst'){
+      for(i=P.length-1;i>=0;i--){p=P[i];
+        p.vy+=.11;p.vx*=.985;p.vy*=.99;
+        p.x+=p.vx+(p.life>24?Math.sin(p.life*.18+p.ph)*.7:0);
+        p.y+=p.vy;p.rot+=p.rs+(p.life>24?Math.sin(p.life*.12+p.ph)*.02:0);
+        p.life++;
+        if(p.life>p.max||p.y>H+20)P.splice(i,1);
+      }
+    }else if(mode==='ripple'){
+      for(i=R.length-1;i>=0;i--){R[i].r+=2.6;if(R[i].r>0)R[i].a-=.011;if(R[i].a<=0)R.splice(i,1);}
+      for(i=P.length-1;i>=0;i--){p=P[i];
+        p.vx*=.962;p.vy*=.962;p.x+=p.vx;p.y+=p.vy;p.rot+=p.rs;p.life++;
+        if(p.life>p.max)P.splice(i,1);
+      }
+    }else if(mode==='vortex'){
+      for(i=0;i<P.length;i++){p=P[i];
+        if(p.dead)continue;
+        if(p.delay>0){p.delay--;continue;}
+        p.a=Math.min(1,p.a+.07);
+        p.r-=(1.1+p.r*.018);
+        p.th+=.045+(46/(p.r+22))*.05;
+        if(p.r<7){p.dead=true;
+          var anyLeft=P.some(function(q){return !q.dead;});
+          if(!anyLeft)R.push({r:4,a:.65});
+        }
+      }
+      for(i=R.length-1;i>=0;i--){R[i].r+=2.6;R[i].a-=.028;if(R[i].a<=0)R.splice(i,1);}
+    }else if(mode==='drift'){
+      var c=brand();
+      for(i=P.length-1;i>=0;i--){p=P[i];
+        p.y+=p.vy;p.x+=Math.sin(t*p.f+p.ph)*p.amp;p.rot+=p.rs;
+        if(p.y>H+18)P.splice(i,1);
+      }
+      if(P.length<14&&Math.random()<.12)P.push(driftP(c,false));
+    }else{
+      for(i=0;i<P.length;i++){p=P[i];
+        if(Math.random()<.0045)p.tw=1;
+        p.tw*=.9;
+      }
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var i,p;
+    if(mode==='burst'){
+      for(i=0;i<P.length;i++){p=P[i];
+        drawLeaf(ctx,p.x,p.y,p.rot,p.s,p.col,1-p.life/p.max);}
+    }else if(mode==='ripple'){
+      var cc=cols();
+      ctx.lineWidth=2.5;
+      for(i=0;i<R.length;i++){if(R[i].r<=0)continue;
+        ctx.globalAlpha=Math.max(0,R[i].a);ctx.strokeStyle=cc.primary;
+        ctx.beginPath();ctx.arc(W/2,H/2,R[i].r,0,6.29);ctx.stroke();}
+      ctx.globalAlpha=1;
+      for(i=0;i<P.length;i++){p=P[i];
+        drawLeaf(ctx,p.x,p.y,p.rot,p.s,p.col,1-p.life/p.max);}
+    }else if(mode==='vortex'){
+      var cv=cols();
+      for(i=0;i<P.length;i++){p=P[i];
+        if(p.dead||p.delay>0)continue;
+        var x=W/2+Math.cos(p.th)*p.r;
+        var y=H/2+Math.sin(p.th)*p.r*.6;
+        var sc=p.s*Math.max(.35,Math.min(1,p.r/120+.35));
+        drawLeaf(ctx,x,y,p.th+1.6,sc,p.col,p.a);}
+      ctx.lineWidth=3;
+      for(i=0;i<R.length;i++){
+        ctx.globalAlpha=Math.max(0,R[i].a);ctx.strokeStyle=cv.onprimary;
+        ctx.beginPath();ctx.arc(W/2,H/2,R[i].r,0,6.29);ctx.stroke();}
+      ctx.globalAlpha=1;
+    }else if(mode==='drift'){
+      for(i=0;i<P.length;i++){p=P[i];
+        var fade=p.y<14?p.y/14:(p.y>H-22?Math.max(0,(H-p.y)/22):1);
+        drawLeaf(ctx,p.x,p.y,p.rot,p.s,p.col,.92*fade);}
+    }else{
+      for(i=0;i<P.length;i++){p=P[i];
+        var px=p.bx+Math.sin(t*p.a+p.p1)*14;
+        var py=p.by+Math.cos(t*p.b+p.p2)*11;
+        var al=.28+.5*(.5+.5*Math.sin(t*p.c2+p.p3));
+        var sz=p.s*(1+p.tw*1.7);
+        ctx.save();
+        ctx.globalAlpha=Math.min(1,al+p.tw*.5);
+        ctx.shadowColor=p.col;ctx.shadowBlur=9;
+        ctx.fillStyle=p.col;
+        ctx.beginPath();ctx.arc(px,py,sz,0,6.29);ctx.fill();
+        ctx.restore();}
+    }
+  }
+  replay();
+  return {replay:replay,step:step,draw:draw,canvas:canvas,isForm:false};
+}
+
+/* ----- formation systems: particles assemble into shapes, then exit ----- */
+var SHAPES={
+  logo:function(o,W,H,c,tone){
+    var S=Math.min(W,H)*.8,sc=S/120,ox=(W-S)/2,oy=(H-S)/2;
+    var main=tone==='dk'?c.highlight:(tone==='gr'?c.onprimary:c.primary);
+    var leafB=tone==='gr'?c.highlight:c.accent;
+    o.save();o.translate(ox,oy);o.scale(sc,sc);
+    o.strokeStyle=main;o.lineWidth=13;
+    o.beginPath();o.arc(46,74,30,0,6.2832);o.stroke();
+    o.fillStyle=main;o.fillRect(80,14,13,92);
+    o.fill(new Path2D('M86 14 q2 -12 14 -14 q0 12 -14 14z'));
+    o.fillStyle=leafB;o.fill(new Path2D('M100 14 q-2 -12 -14 -14 q0 12 14 14z'));
+    o.restore();
+  },
+  word:function(o,W,H,c,tone){
+    var main=tone==='dk'?c.surface:c.primary;
+    var txt='digrocer';
+    o.font='700 100px "Baloo 2", sans-serif';
+    var w1=o.measureText(txt).width,wd=o.measureText('.').width;
+    var size=Math.min(100*(W*.84)/(w1+wd),H*.6);
+    o.font='700 '+size+'px "Baloo 2", sans-serif';
+    o.textBaseline='middle';
+    w1=o.measureText(txt).width;wd=o.measureText('.').width;
+    var x=(W-(w1+wd))/2,y=H/2;
+    o.fillStyle=main;o.fillText(txt,x,y);
+    o.fillStyle=c.accent;o.fillText('.',x+w1,y);
+  },
+  basket:function(o,W,H,c,tone){
+    var S=Math.min(W,H)*.74,sc=S/120,ox=(W-S)/2,oy=(H-S*110/120)/2;
+    o.save();o.translate(ox,oy);o.scale(sc,sc);
+    o.fillStyle=c.primary;
+    o.fill(new Path2D('M28 46 h64 l-8 48 a8 8 0 0 1 -8 7 h-32 a8 8 0 0 1 -8 -7 z'));
+    o.strokeStyle=c.primary;o.lineWidth=8;o.lineCap='round';
+    o.stroke(new Path2D('M42 46 v-7 a18 18 0 0 1 36 0 v7'));
+    o.strokeStyle=c.highlight;o.lineWidth=5;
+    o.stroke(new Path2D('M38 62 h44 M40 76 h40'));
+    o.restore();
+  },
+  heart:function(o,W,H,c,tone){
+    var S=Math.min(W,H)*.78,sc=S/24;
+    o.save();o.translate((W-S)/2,(H-S)/2);o.scale(sc,sc);
+    o.fillStyle=c.accent;
+    o.fill(new Path2D('M12 21 C5 16 2 12 2 8.5 A4.5 4.5 0 0 1 12 5.5 A4.5 4.5 0 0 1 22 8.5 C22 12 19 16 12 21Z'));
+    o.restore();
+  },
+  check:function(o,W,H,c,tone){
+    var col=tone==='gr'?c.onprimary:c.primary;
+    o.strokeStyle=col;o.lineWidth=Math.min(W,H)*.1;o.lineCap='round';o.lineJoin='round';
+    o.beginPath();o.moveTo(W*.34,H*.52);o.lineTo(W*.46,H*.66);o.lineTo(W*.68,H*.34);o.stroke();
+  }
+};
+
+function makeForm(canvas){
+  var shape=canvas.dataset.shape,flow=canvas.dataset.flow,tone=canvas.dataset.tone||'lt';
+  var ctx=canvas.getContext('2d');
+  var W=0,H=0,P=[],R=[],t=0,phase='fly',pt=0;
+  var HOLD=flow==='burst'?64:(flow==='in'?1e9:120);
+  function resize(){
+    var dpr=Math.min(2,window.devicePixelRatio||1);
+    W=canvas.clientWidth;H=canvas.clientHeight;
+    canvas.width=Math.max(1,W*dpr);canvas.height=Math.max(1,H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function sample(){
+    var ow=Math.max(1,W|0),oh=Math.max(1,H|0);
+    var oc=document.createElement('canvas');oc.width=ow;oc.height=oh;
+    var o=oc.getContext('2d',{willReadFrequently:true});
+    SHAPES[shape](o,ow,oh,cols(),tone);
+    var d;
+    try{d=o.getImageData(0,0,ow,oh).data;}catch(e){return [];}
+    var pts=[],step=3;
+    for(var y=1;y<oh;y+=step)for(var x=1;x<ow;x+=step){
+      var i=(y*ow+x)*4;
+      if(d[i+3]>150)pts.push({tx:x+rnd(-1,1),ty:y+rnd(-1,1),col:'rgb('+d[i]+','+d[i+1]+','+d[i+2]+')'});
+    }
+    var MAX=720;
+    if(pts.length>MAX){var keep=MAX/pts.length;pts=pts.filter(function(){return Math.random()<keep;});}
+    return pts;
+  }
+  function spawn(){
+    var pts=sample();P=[];R=[];t=0;pt=0;phase='fly';
+    var big=Math.max(W,H);
+    for(var i=0;i<pts.length;i++){
+      var q=pts[i],a=rnd(0,6.2832),rr=big*rnd(.55,.85);
+      P.push({
+        x:W/2+Math.cos(a)*rr,y:H/2+Math.sin(a)*rr,
+        vx:0,vy:0,tx:q.tx,ty:q.ty,col:q.col,
+        sz:rnd(1.1,2.3),k:rnd(.012,.03),dmp:rnd(.84,.9),
+        delay:flow==='burst'?rnd(0,14):rnd(0,46),
+        ph:rnd(0,6.2832),a:0,tw:0,
+        or:big*rnd(.3,.7),ot:rnd(0,6.2832),os:rnd(.05,.12)
+      });
+    }
+  }
+  function step(){
+    t++;
+    var i,p;
+    if(phase==='fly'){
+      var allSet=true;
+      for(i=0;i<P.length;i++){p=P[i];
+        if(p.delay>0){p.delay--;allSet=false;continue;}
+        p.a=Math.min(1,p.a+.08);
+        if(flow==='swirl'){
+          p.or=p.or*.93-.25;p.ot+=p.os;
+          if(p.or<1)p.or=0;else allSet=false;
+          p.x=p.tx+Math.cos(p.ot)*p.or;p.y=p.ty+Math.sin(p.ot)*p.or*.7;
+        }else{
+          var dx=p.tx-p.x,dy=p.ty-p.y;
+          p.vx=(p.vx+dx*p.k)*p.dmp;p.vy=(p.vy+dy*p.k)*p.dmp;
+          p.x+=p.vx;p.y+=p.vy;
+          if(Math.abs(dx)>.6||Math.abs(dy)>.6||Math.abs(p.vx)+Math.abs(p.vy)>.3)allSet=false;
+        }
+        if(Math.random()<.004)p.tw=1;
+        p.tw*=.9;
+      }
+      if(t>250){
+        for(i=0;i<P.length;i++){p=P[i];p.x=p.tx;p.y=p.ty;p.a=1;p.delay=0;}
+        allSet=true;
+      }
+      if(allSet){phase='hold';pt=0;
+        if(flow==='swirl')R.push({r:6,al:.6});
+      }
+    }else if(phase==='hold'){
+      pt++;
+      for(i=0;i<P.length;i++){p=P[i];
+        if(Math.random()<.005)p.tw=1;
+        p.tw*=.9;
+      }
+      if(pt>HOLD){
+        phase='out';pt=0;
+        for(i=0;i<P.length;i++){p=P[i];
+          p.x=W/2+(p.tx-W/2);p.y=H/2+(p.ty-H/2);
+          if(flow==='burst'){
+            var ang=Math.atan2(p.ty-H/2,p.tx-W/2);
+            p.vx=Math.cos(ang)*rnd(1.5,5)+rnd(-1,1);
+            p.vy=Math.sin(ang)*rnd(1.5,5)-rnd(1,3);
+          }else if(flow==='swirl'){
+            p.or=.6;
+          }else{
+            p.vx=rnd(-.4,.4);p.vy=rnd(-.9,-.3);
+          }
+          p.delay=rnd(0,flow==='burst'?6:30);
+        }
+      }
+    }else if(phase==='out'){
+      pt++;
+      var anyAlive=false;
+      for(i=0;i<P.length;i++){p=P[i];
+        if(p.a<=0)continue;
+        if(p.delay>0){p.delay--;anyAlive=true;continue;}
+        if(flow==='burst'){
+          p.vy+=.12;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.a-=.016;
+        }else if(flow==='swirl'){
+          p.or=p.or*1.07+.4;p.ot+=p.os*1.4;
+          p.x=p.tx+Math.cos(p.ot)*p.or;p.y=p.ty+Math.sin(p.ot)*p.or*.7;
+          p.a-=.02;
+        }else{
+          p.x+=p.vx+Math.sin(t*.05+p.ph)*.35;p.y+=p.vy;p.vy-=.012;p.a-=.013;
+        }
+        if(p.a>0)anyAlive=true;
+      }
+      if(!anyAlive){phase='gap';pt=0;}
+    }else if(phase==='gap'){
+      pt++;
+      if(pt>46)spawn();
+    }
+    for(i=R.length-1;i>=0;i--){R[i].r+=2.4;R[i].al-=.022;if(R[i].al<=0)R.splice(i,1);}
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var i,p;
+    var pulse=1;
+    if(phase==='hold'&&shape==='heart')pulse=1+Math.sin(pt*.12)*.035;
+    for(i=0;i<P.length;i++){p=P[i];
+      if(p.a<=0)continue;
+      var x=p.x,y=p.y;
+      if(phase==='hold'){
+        x=W/2+(p.tx-W/2)*pulse+Math.sin(t*.045+p.ph)*.55;
+        y=H/2+(p.ty-H/2)*pulse+Math.cos(t*.04+p.ph)*.55;
+      }
+      ctx.globalAlpha=Math.max(0,Math.min(1,p.a+p.tw*.6));
+      ctx.fillStyle=p.col;
+      var s=p.sz*(1+p.tw*1.3);
+      ctx.beginPath();ctx.arc(x,y,s,0,6.2832);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    if(R.length){
+      var c=cols();
+      ctx.lineWidth=3;
+      for(i=0;i<R.length;i++){
+        ctx.globalAlpha=Math.max(0,R[i].al);
+        ctx.strokeStyle=tone==='gr'?c.onprimary:c.primary;
+        ctx.beginPath();ctx.arc(W/2,H/2,R[i].r,0,6.2832);ctx.stroke();
+      }
+      ctx.globalAlpha=1;
+    }
+  }
+  function replay(){
+    resize();spawn();
+    if(reduced){
+      for(var i=0;i<P.length;i++){var p=P[i];p.x=p.tx;p.y=p.ty;p.a=1;p.delay=0;}
+      phase='hold';pt=1;draw();
+    }
+  }
+  replay();
+  return {replay:replay,step:step,draw:draw,canvas:canvas,isForm:true};
+}
+
+/* ---------- boot all addon canvases ---------- */
+var systems=[];
+var sysByCanvas=new Map();
+document.querySelectorAll('.pnew canvas.pfx').forEach(function(cv){
+  var s=cv.dataset.mode==='form'?makeForm(cv):makeAmbient(cv);
+  s.active=true;
+  systems.push(s);
+  sysByCanvas.set(cv,s);
+});
+
+/* only animate what is on screen */
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){var s=sysByCanvas.get(e.target);if(s)s.active=e.isIntersecting;});
+  },{rootMargin:'80px'});
+  systems.forEach(function(s){io.observe(s.canvas);});
+}
+if(!reduced){
+  (function loop(){
+    for(var i=0;i<systems.length;i++){
+      if(systems[i].active){systems[i].step();systems[i].draw();}
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ---------- pick + replay wiring for the new cards (mirrors v4) ---------- */
+document.querySelectorAll('.pnew .v[data-g]').forEach(function(card){
+  card.setAttribute('role','button');
+  card.setAttribute('aria-label',card.dataset.g+' option: '+card.dataset.n);
+  var act=function(){
+    var g=card.dataset.g;
+    document.querySelectorAll('.v[data-g="'+g+'"]').forEach(function(s){s.classList.remove('selected');});
+    card.classList.add('selected');
+    state.sel.set(g,card.dataset.n);
+    var st=card.querySelector('.anim');
+    if(st){st.classList.remove('play');void st.offsetWidth;st.classList.add('play');}
+    card.querySelectorAll('canvas.pfx').forEach(function(cv){
+      var s=sysByCanvas.get(cv);if(s)s.replay();
+    });
+    renderSel();
+  };
+  card.addEventListener('click',act);
+  card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});
+});
+
+/* ---------- palette switches recolor every particle ---------- */
+var origApplyPalette=applyPalette;
+applyPalette=function(k){
+  origApplyPalette(k);
+  systems.forEach(function(s){s.replay();});
+};
+
+/* re-sample text shapes once the brand font is in */
+if(document.fonts&&document.fonts.ready){
+  document.fonts.ready.then(function(){
+    systems.forEach(function(s){if(s.isForm)s.replay();});
+  });
+}
+
+var rsT;
+window.addEventListener('resize',function(){
+  clearTimeout(rsT);
+  rsT=setTimeout(function(){systems.forEach(function(s){s.replay();});},180);
+});
+
+renderSel();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DiGrocer — Festive Seasons of Ghana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../concept/shared.css">
+<link rel="stylesheet" href="themes.css">
+<style>
+body{overflow:auto}
+.hub{
+  min-height:100vh;position:relative;
+  background:
+    radial-gradient(900px 500px at 10% -10%, var(--mint) 0%, transparent 55%),
+    radial-gradient(700px 480px at 105% 110%, var(--harvest-soft) 0%, transparent 60%),
+    var(--canvas);
+  padding:54px 22px 80px;
+  transition:background .4s;
+}
+.hub>canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.hubin{max-width:1060px;margin:0 auto;position:relative;z-index:2}
+.brandrow{display:flex;align-items:center;gap:12px;justify-content:center}
+.wordmark{font-size:30px;font-weight:900;letter-spacing:-.04em}
+.wordmark .di{color:var(--grocer)}
+.hub h1{font-size:clamp(30px,5.5vw,50px);font-weight:900;letter-spacing:-.04em;text-align:center;margin:20px 0 10px;line-height:1.05}
+.hub .lede{text-align:center;color:var(--ink-muted);max-width:620px;margin:0 auto 40px;font-size:15.5px}
+
+/* ---- two-column: picker + phone ---- */
+.duo{display:grid;grid-template-columns:1fr 420px;gap:34px;align-items:start}
+@media(max-width:920px){.duo{grid-template-columns:1fr}.phonewrap{order:-1}}
+
+/* ---- theme picker cards ---- */
+.autoline{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.autochip{
+  display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;
+  font-size:13px;font-weight:800;border:1.5px solid var(--hairline);background:var(--surface);
+  transition:transform .18s var(--spring);
+}
+.autochip:active{transform:scale(.94)}
+.autochip.on{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
+.autoline .sub{flex:1;min-width:200px}
+.themes{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.fcard{
+  border-radius:26px;padding:18px 18px 16px;text-align:left;cursor:pointer;border:none;
+  transition:transform .25s var(--spring),box-shadow .25s;position:relative;overflow:hidden;
+}
+.fcard:hover{transform:translateY(-3px)}
+.fcard.on{box-shadow:var(--shadow-pop),0 0 0 2.5px var(--grocer)}
+.fcard .em{font-size:32px;display:block;margin-bottom:8px}
+.fcard h2{font-size:17px;font-weight:900;letter-spacing:-.02em}
+.fcard .when{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin:2px 0 8px}
+.fcard p{font-size:12.5px;color:var(--ink-muted);line-height:1.5;min-height:56px}
+.fcard .swatches{display:flex;gap:6px;margin-top:12px}
+.fcard .swatches i{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.7);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+
+/* ---- phone demo ---- */
+.phonewrap{position:sticky;top:24px;display:grid;justify-content:center}
+.phone{width:396px;height:760px}
+@media(max-width:430px){.phone{width:100%;height:740px;border-radius:40px;border-width:8px}}
+.phone .scr{padding-bottom:170px;background:transparent}
+canvas#phoneAmb{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.homehead{padding:10px 20px 0;display:flex;align-items:center;gap:12px;position:relative;z-index:2}
+.homehead .greet{flex:1;min-width:0}
+.homehead .greet b{font-size:19px;font-weight:900;letter-spacing:-.02em;display:block}
+.homehead .greet span{font-size:12px;color:var(--ink-muted);font-weight:600}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--mint-deep);display:grid;place-items:center;font-size:19px;flex:none}
+.searchfield{
+  margin:12px 20px 4px;display:flex;align-items:center;gap:10px;padding:13px 16px;
+  border-radius:18px;color:var(--ink-muted);font-size:14px;font-weight:600;width:calc(100% - 40px);
+  border:1px solid var(--hairline);
+}
+.searchfield svg{width:17px;height:17px;flex:none}
+.promo{
+  margin:14px 20px 4px;border-radius:var(--r-card);padding:18px;color:#fff;
+  background:linear-gradient(120deg,var(--forest),var(--grocer));position:relative;overflow:hidden;
+  border:none;text-align:left;box-shadow:var(--shadow-pop);width:calc(100% - 40px);display:block;
+}
+.promo .pcode{display:inline-block;background:rgba(255,255,255,.22);border-radius:999px;padding:4px 11px;font-size:11px;font-weight:800;letter-spacing:.06em;margin-bottom:9px}
+.promo h3{font-size:19px;font-weight:900;letter-spacing:-.02em;line-height:1.15;max-width:75%}
+.promo p{font-size:12px;opacity:.85;margin-top:4px;max-width:75%}
+.promo .bigem{position:absolute;right:-4px;bottom:-12px;font-size:74px;opacity:.9}
+.catrow{display:flex;gap:9px;overflow-x:auto;padding:14px 20px 4px;scrollbar-width:none}
+.catrow::-webkit-scrollbar{display:none}
+.catpill{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:64px;border:none;background:none}
+.catpill .em{width:56px;height:56px;border-radius:20px;background:var(--surface);border:1px solid var(--hairline);display:grid;place-items:center;font-size:25px;box-shadow:var(--shadow);transition:transform .2s var(--spring)}
+.catpill:active .em{transform:scale(.9)}
+.catpill span{font-size:10.5px;font-weight:700;color:var(--ink-muted)}
+.railhead{display:flex;align-items:baseline;padding:18px 20px 10px}
+.railhead .h-sec{flex:1}
+.railhead button{font-size:12px;font-weight:800;color:var(--grocer)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:2px 20px}
+
+/* ---- notes ---- */
+.notes{margin-top:40px;border-radius:26px;padding:22px 24px}
+.notes h3{font-size:15px;font-weight:900;margin-bottom:10px}
+.notes ul{list-style:none;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.notes li{font-size:13px;color:var(--ink-muted);display:flex;gap:8px}
+.notes li::before{content:"✓";color:var(--grocer);font-weight:900}
+.notes code{font-size:12px;background:var(--mint);color:var(--forest);border-radius:6px;padding:1px 6px;font-weight:700}
+.labline{text-align:center;margin-top:34px;font-size:13px;color:var(--ink-muted)}
+.labline a{color:var(--forest);font-weight:800}
+</style>
+</head>
+<body>
+<div class="hub">
+<canvas id="amb"></canvas>
+<div class="hubin">
+  <div class="brandrow">
+    <svg width="40" height="47" viewBox="0 0 100 118" fill="none"><path d="M12 6 L12 112 L50 112 C78 112 92 91 92 59 C92 27 78 6 50 6 Z" fill="var(--grocer)"/><rect x="12" y="6" width="18" height="106" fill="var(--forest)"/></svg>
+    <span class="wordmark"><span class="di">Di</span>Grocer</span>
+  </div>
+  <h1>Festive seasons of Ghana.</h1>
+  <p class="lede">Six seasonal skins for the Warm-Market system, drawn from the festive calendar — Independence Day, Kwahu Easter, Eid, Homowo, Hogbetsotso Za and Bronya. Each is one body class: every token, gradient and particle recolors with the season. Tap a festival.</p>
+
+  <div class="duo">
+    <div>
+      <div class="autoline">
+        <button class="autochip" id="autoChip">📅 Follow the calendar</button>
+        <span class="sub" id="autoNote"></span>
+      </div>
+      <div class="themes" id="themeCards"></div>
+
+      <div class="notes glass">
+        <h3>Shipping a season</h3>
+        <ul>
+          <li>One class on body — <code>theme-bronya</code> — re-points the Warm-Market tokens; nothing else changes</li>
+          <li>Hand the festival palette to <code>DGFX</code> and the drift, bursts and splash recolor on their next run</li>
+          <li>Glow shadows retint via <code>color-mix()</code> behind <code>@supports</code> — older engines keep the stock green glow</li>
+          <li>Eid follows the lunar calendar, so it's flagged server-side rather than by date math</li>
+          <li>Off-season, the calendar leans toward the next festival coming up</li>
+          <li>Deep-linkable — try <code>#homowo</code> or <code>#eid</code> in the URL</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phonewrap">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span class="sicons">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="4.5" width="3" height="6.5" rx="1"/><rect x="9" y="2" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="0.5" y="0.5" width="20" height="11" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/><path d="M22.5 4v4a2.2 2.2 0 0 0 0-4Z" fill="currentColor" opacity=".4"/></svg>
+        </span></div>
+        <canvas id="phoneAmb"></canvas>
+        <div class="scr on">
+          <div class="homehead">
+            <div class="greet"><b id="greet">Afehyia pa, Ama! 🎄</b><span>Deliver to East Legon · 25–35 min</span></div>
+            <div class="avatar">🧕🏾</div>
+          </div>
+          <div class="fest-ribbon"></div>
+          <div class="searchfield glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span id="searchHint">Search the season…</span>
+          </div>
+          <button class="promo" id="promoBtn">
+            <span class="pcode" id="promoCode">BRONYA25</span>
+            <h3 id="promoH">The Bronya feast, delivered.</h3>
+            <p id="promoP">25% off festive baskets all December.</p>
+            <span class="bigem" id="promoEm">🎄</span>
+          </button>
+          <div class="catrow" id="cats"></div>
+          <div class="railhead"><span class="h-sec" id="seasonTitle">For the season</span><button>See all</button></div>
+          <div class="grid2" id="tiles"></div>
+        </div>
+        <button class="cartbar show" id="cartbar">
+          <span class="n" id="cartN">3</span><b id="cartLabel">Festive basket · 3 items</b><span id="cartTotal">GH₵ 223</span>
+        </button>
+        <nav class="dock glass">
+            <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.2 12 4l9 7.2V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1Z"/></svg>Home</button>
+            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Explore</button>
+            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8h14l-1.4 11.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8Z"/><path d="M8.5 8a3.5 3.5 0 0 1 7 0"/></svg>Basket</button>
+            <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-9-8.6C1.4 7.6 4 5 6.8 5c2 0 3.6 1.1 5.2 3 1.6-1.9 3.2-3 5.2-3C20 5 22.6 7.6 21 11.4 19 15.6 12 20 12 20Z"/></svg>Saved</button>
+          <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-3.4 4.4-5 8-5s6.6 1.6 8 5"/></svg>Profile</button>
+        </nav>
+        <canvas class="fxoverlay" id="fxo"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <p class="labline">Layered on the <a href="../concept/index.html">iOS-27 concept</a> tokens · part of the <a href="../index.html">brand concept lab</a></p>
+</div>
+</div>
+
+<script src="../concept/fx.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ---------------- the festive calendar ---------------- */
+var THEMES={
+  independence:{
+    em:'🇬🇭', name:'Independence Day', when:'6 March',
+    blurb:'Black Star Square, the flag everywhere — red of the struggle, gold of the land, green of the forests.',
+    greet:'Happy Independence Day! 🇬🇭', search:'Search jollof, khebab, drinks…',
+    promo:{code:'MARCH6', h:'Freedom weekend, free delivery.', p:'On every order over GH₵ 100 till Sunday.', em:'⭐'},
+    cats:[['🍅','Jollof'],['🍗','Grills'],['🥤','Drinks'],['🍢','Khebab'],['🧊','Ice']],
+    tiles:[['🍅','Jollof party box','GH₵ 60'],['🐔','Grilled chicken, whole','GH₵ 70'],['🥤','Soft-drink crate ×12','GH₵ 55'],['🍢','Khebab pack ×10','GH₵ 35']],
+    cart:['3','Freedom basket · 3 items','GH₵ 185'],
+    colors:['#CE1126','#FCD116','#006B3F']
+  },
+  easter:{
+    em:'🪂', name:'Kwahu Easter', when:'March · April',
+    blurb:'The whole country goes up the mountain — paragliding off Odweanoma, street jams, ridge-top picnics.',
+    greet:'Up the mountain we go! 🪂', search:'Search picnic packs, sobolo…',
+    promo:{code:'KWAHU', h:'Picnic packs for the ridge.', p:'Chilled and bundled for the climb.', em:'🪂'},
+    cats:[['🧺','Picnics'],['🍩','Bofrot'],['🌺','Sobolo'],['🍢','Khebab'],['🧴','Sunscreen']],
+    tiles:[['🧺','Ridge picnic basket','GH₵ 150'],['🍩','Bofrot, dozen','GH₵ 20'],['🌺','Sobolo, chilled 1L','GH₵ 10'],['🍢','Khebab pack ×10','GH₵ 35']],
+    cart:['2','Ridge basket · 2 items','GH₵ 170'],
+    colors:['#2196C9','#0E5E8A','#F5A623']
+  },
+  eid:{
+    em:'🌙', name:'Eid Mubarak', when:'al-Fitr & al-Adha · lunar',
+    blurb:'Emerald and burnished gold for the feasts that end the fast and crown the pilgrimage.',
+    greet:'Eid Mubarak, Ama! 🌙', search:'Search dates, mutton, basmati…',
+    promo:{code:'EIDFEAST', h:'The Eid table, taken care of.', p:'Feast bundles for family and friends.', em:'🌙'},
+    cats:[['🐑','Mutton'],['🌴','Dates'],['🍚','Basmati'],['🧅','Spices'],['🍊','Juices']],
+    tiles:[['🐑','Fresh mutton, 2 kg','GH₵ 160'],['🌴','Dates, 500 g','GH₵ 45'],['🍚','Basmati rice, 5 kg','GH₵ 110'],['🧅','Feast spice bundle','GH₵ 30']],
+    cart:['4','Eid feast · 4 items','GH₵ 345'],
+    colors:['#117A4E','#D4AF37','#0A5A38']
+  },
+  homowo:{
+    em:'🌽', name:'Homowo', when:'August · September',
+    blurb:'The Ga harvest that hoots at hunger — kpokpoi sprinkled through the streets, palm-nut soup on every fire.',
+    greet:'Happy Homowo! 🌽', search:'Search corn dough, palm nut…',
+    promo:{code:'HOMOWO', h:'Hoot at hunger. Stock the pot.', p:'Kpokpoi corner — everything for the feast.', em:'🌽'},
+    cats:[['🌽','Maize'],['🥣','Palm nut'],['🐟','Fish'],['🌶️','Shito'],['🧂','Staples']],
+    tiles:[['🌽','Corn dough, 2 kg','GH₵ 25'],['🥣','Palm-nut cream, jar','GH₵ 32'],['🐟','Smoked fish pack','GH₵ 48'],['🌶️','Kpakpo shito, jar','GH₵ 15']],
+    cart:['3','Homowo pot · 3 items','GH₵ 105'],
+    colors:['#C97016','#E9B41F','#8C4A0F']
+  },
+  hogbetsotso:{
+    em:'🥁', name:'Hogbetsotso Za', when:'1st Saturday · November',
+    blurb:'The Anlo-Ewe remember the exodus from Notsie — chiefs in deep kente, drums from Anloga to the sea.',
+    greet:'Mia woezɔ! 🥁', search:'Search akple, okro, tilapia…',
+    promo:{code:'HOGBE', h:'Akple & fetri detsi night.', p:'Volta favourites, fresh to your door.', em:'🥁'},
+    cats:[['🫓','Akple'],['🥬','Okro'],['🐟','Tilapia'],['🌶️','Pepper'],['🧂','Staples']],
+    tiles:[['🫓','Akple mix, 2 kg','GH₵ 28'],['🥬','Okro basket','GH₵ 14'],['🐟','Fresh tilapia, large','GH₵ 60'],['🌶️','Pepper mix, jar','GH₵ 12']],
+    cart:['2','Volta basket · 2 items','GH₵ 74'],
+    colors:['#4338A8','#D03A2B','#E3A81C']
+  },
+  bronya:{
+    em:'🎄', name:'Bronya · Christmas', when:'December',
+    blurb:'Afehyia pa — chicken and jollof on every table, sobolo on ice, the markets glowing till midnight.',
+    greet:'Afehyia pa, Ama! 🎄', search:'Search chicken, rice, sobolo…',
+    promo:{code:'BRONYA25', h:'The Bronya feast, delivered.', p:'25% off festive baskets all December.', em:'🎄'},
+    cats:[['🍗','Chicken'],['🍚','Rice'],['🌺','Sobolo'],['🎂','Baking'],['🥤','Malt']],
+    tiles:[['🍗','Whole chicken','GH₵ 85'],['🍚','Jasmine rice, 5 kg','GH₵ 120'],['🌺','Sobolo bundle','GH₵ 18'],['🎂','Family cake','GH₵ 95']],
+    cart:['3','Bronya basket · 3 items','GH₵ 223'],
+    colors:['#157A3D','#D6261E','#E9B53C']
+  }
+};
+var ORDER=['independence','easter','eid','homowo','hogbetsotso','bronya'];
+
+/* what does the calendar say today? (Eid is lunar — flagged
+   server-side in the real app, so auto skips it here) */
+function calendarKey(d){
+  var m=d.getMonth(),day=d.getDate();
+  if(m===11)return{k:'bronya',live:true};
+  if(m===2&&day<=9)return{k:'independence',live:true};
+  if(m===2||m===3)return{k:'easter',live:true};
+  if(m===7||m===8)return{k:'homowo',live:true};
+  if(m===10)return{k:'hogbetsotso',live:true};
+  if(m<=1)return{k:'independence',live:false};
+  if(m<=6)return{k:'homowo',live:false};
+  if(m===9)return{k:'hogbetsotso',live:false};
+  return{k:'bronya',live:false};
+}
+
+/* ---------------- particles ----------------
+   DGFX spawners read their palette live, so mutating these
+   arrays in place reskins the drift without remounting. */
+var hubPal=[],phonePal=[];
+function setPal(arr,cols){arr.length=0;for(var i=0;i<cols.length;i++)arr.push(cols[i]);}
+
+/* seed with the boot season so the first leaves wear it */
+var cal=calendarKey(new Date());
+var bootHash=(location.hash||'').replace('#','');
+var bootKey=THEMES[bootHash]?bootHash:cal.k;
+setPal(hubPal,THEMES[bootKey].colors);
+setPal(phonePal,THEMES[bootKey].colors);
+
+var hubAmb=document.getElementById('amb');
+var phoneAmb=document.getElementById('phoneAmb');
+var fxo=document.getElementById('fxo');
+DGFX.mount(hubAmb,'drift',{count:20,alpha:.4,colors:hubPal});
+DGFX.mount(phoneAmb,'drift',{count:12,alpha:.5,colors:phonePal});
+DGFX.mount(fxo,'burstlayer');
+
+/* ---------------- apply a season ---------------- */
+var current=null,auto=true;
+function el(id){return document.getElementById(id);}
+function applyTheme(key,burst){
+  var t=THEMES[key];if(!t||key===current)return;
+  current=key;
+  document.body.className='theme-'+key;
+  el('greet').textContent=t.greet;
+  el('searchHint').textContent=t.search;
+  el('promoCode').textContent=t.promo.code;
+  el('promoH').textContent=t.promo.h;
+  el('promoP').textContent=t.promo.p;
+  el('promoEm').textContent=t.promo.em;
+  el('cartN').textContent=t.cart[0];
+  el('cartLabel').textContent=t.cart[1];
+  el('cartTotal').textContent=t.cart[2];
+  el('seasonTitle').textContent='For '+t.name.split(' · ')[0];
+  el('cats').innerHTML=t.cats.map(function(c){
+    return '<button class="catpill"><span class="em">'+c[0]+'</span><span>'+c[1]+'</span></button>';
+  }).join('');
+  el('tiles').innerHTML=t.tiles.map(function(p){
+    return '<div class="tile"><span class="ph">'+p[0]+'</span><h5>'+p[1]+'</h5><div class="pr">'+p[2]+'</div>'+
+      '<span class="step zero"><button class="minus">−</button><span class="q">0</span><button>+</button></span></div>';
+  }).join('');
+  setPal(hubPal,t.colors);setPal(phonePal,t.colors);
+  document.querySelectorAll('.fcard').forEach(function(c){
+    c.classList.toggle('on',c.dataset.key===key);
+  });
+  if(burst){
+    var r=fxo.getBoundingClientRect();
+    DGFX.burstAt(fxo,r.width/2,r.height*.4,t.colors,22);
+    el('cartN').classList.remove('bump');void el('cartN').offsetWidth;
+    el('cartN').classList.add('bump');
+  }
+  if(history.replaceState)history.replaceState(null,'','#'+key);
+}
+
+/* ---------------- picker cards ---------------- */
+var cards=el('themeCards');
+ORDER.forEach(function(key){
+  var t=THEMES[key];
+  var b=document.createElement('button');
+  b.className='fcard glass';b.dataset.key=key;
+  b.innerHTML='<span class="em">'+t.em+'</span><h2>'+t.name+'</h2>'+
+    '<div class="when">'+t.when+'</div><p>'+t.blurb+'</p>'+
+    '<span class="swatches">'+t.colors.map(function(c){return '<i style="background:'+c+'"></i>';}).join('')+'</span>';
+  b.addEventListener('click',function(){
+    auto=false;el('autoChip').classList.remove('on');
+    applyTheme(key,true);
+  });
+  cards.appendChild(b);
+});
+
+/* ---------------- auto mode ---------------- */
+el('autoNote').textContent=cal.live
+  ? THEMES[cal.k].name+' is on right now — the app wears it automatically.'
+  : 'No festival today — leaning toward '+THEMES[cal.k].name+', up next.';
+el('autoNote').className='sub';
+el('autoChip').addEventListener('click',function(){
+  auto=true;this.classList.add('on');
+  applyTheme(cal.k,true);
+});
+
+/* ---------------- boot ---------------- */
+if(THEMES[bootHash]){auto=false;applyTheme(bootHash,false);}
+else{el('autoChip').classList.add('on');applyTheme(cal.k,false);}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>digrocer — Android 16 · lab theme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Roboto+Flex:opsz,wght@8..144,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body{overflow:auto}
+.hub{
+  min-height:100vh;position:relative;
+  background:
+    radial-gradient(900px 500px at 10% -10%, var(--mint) 0%, transparent 55%),
+    radial-gradient(700px 480px at 105% 110%, var(--harvest-soft) 0%, transparent 60%),
+    var(--canvas);
+  padding:60px 22px 80px;
+}
+.hub>canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.hubin{max-width:880px;margin:0 auto;position:relative;z-index:2}
+.brandrow{display:flex;align-items:center;gap:12px;justify-content:center}
+.wordmark{font-size:30px;font-weight:900;letter-spacing:-.04em}
+.wordmark .dot{color:var(--berry)}
+.hub h1{font-size:clamp(30px,6vw,52px);font-weight:900;letter-spacing:-.04em;text-align:center;margin:22px 0 10px;line-height:1.05}
+.hub .lede{text-align:center;color:var(--ink-muted);max-width:560px;margin:0 auto 44px;font-size:15.5px}
+.apps{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.appcard{
+  border-radius:30px;padding:26px 24px;text-align:left;display:block;text-decoration:none;color:inherit;
+  transition:transform .25s var(--spring);
+}
+.appcard:hover{transform:translateY(-4px)}
+.appcard .em{font-size:42px;display:block;margin-bottom:12px}
+.appcard h2{font-size:21px;font-weight:900;letter-spacing:-.02em}
+.appcard p{color:var(--ink-muted);font-size:13.5px;margin:6px 0 14px;line-height:1.55}
+.appcard .cta{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:var(--forest)}
+.appcard.darkc{background:rgba(18,29,22,.92);color:#E8E8E8;border-color:rgba(255,255,255,.12)}
+.appcard.darkc p{color:#9E9E9E}
+.appcard.darkc .cta{color:#7FB069}
+.notes{margin-top:44px;border-radius:26px;padding:22px 24px}
+.notes h3{font-size:15px;font-weight:900;margin-bottom:10px}
+.notes ul{list-style:none;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.notes li{font-size:13px;color:var(--ink-muted);display:flex;gap:8px}
+.notes li::before{content:"✓";color:var(--grocer);font-weight:900}
+.labline{text-align:center;margin-top:34px;font-size:13px;color:var(--ink-muted)}
+.labline a{color:var(--forest);font-weight:800}
+</style>
+</head>
+<body>
+<div class="hub">
+<canvas id="amb"></canvas>
+<div class="hubin">
+  <div class="brandrow">
+    <svg width="40" height="47" viewBox="0 0 120 120" fill="none"><circle cx="46" cy="74" r="30" stroke="#1F5130" stroke-width="13"/><rect x="80" y="14" width="13" height="92" rx="6.5" fill="#1F5130"/><path d="M86 14 q2 -12 14 -14 q0 12 -14 14z" fill="#1F5130"/><path d="M100 14 q-2 -12 -14 -14 q0 12 14 14z" fill="#E0452B" opacity=".85"/></svg>
+    <span class="wordmark">digrocer<span class="dot">.</span></span>
+  </div>
+  <h1>The Android 16 concept.</h1>
+  <p class="lede">Every screen of the real customer and rider apps, mirrored detail-for-detail — then rebuilt with the Android 16 feel — Material 3 Expressive tonal surfaces, ink ripples, shape-morphing buttons and emphasized motion, living particles kept. Dressed in the lab theme — Market Classic by day, Evening Delivery after dark. Tap through; everything works.</p>
+
+  <div class="apps">
+    <a class="appcard glass" href="customer.html">
+      <span class="em">🧺</span>
+      <h2>Customer</h2>
+      <p>Splash → onboarding → auth → home with live-order pill, explore, product, cart, checkout, receipt, live tracking, orders, wallet, favourites, profile, addresses &amp; support chat. 20 screens.</p>
+      <span class="cta">Open the customer app →</span>
+    </a>
+    <a class="appcard glass darkc" href="rider.html">
+      <span class="em">🛵</span>
+      <h2>Rider</h2>
+      <p>Map-centric — light by default, dark mode in Settings. Go online, accept a 30-second offer, ride to the store, checklist pickup, swipe-to-confirm, deliver with photo proof — full Uber-style lifecycle plus earnings &amp; settings.</p>
+      <span class="cta">Open the rider app →</span>
+    </a>
+  </div>
+
+  <div class="notes glass">
+    <h3>The graceful floor, Android edition</h3>
+    <ul>
+      <li>Tonal elevation instead of blur — fast on any GPU</li>
+      <li>prefers-reduced-motion gets calm, settled stills</li>
+      <li>Particles pause off-screen (IntersectionObserver)</li>
+      <li>P3 wide-gamut color only where displays support it</li>
+      <li>Scroll-driven reveals skip on older engines</li>
+      <li>No build, no dependencies — plain HTML/CSS/JS</li>
+    </ul>
+  </div>
+
+  <p class="labline">Built on the decisions from the <a href="../index.html">brand concept lab</a> · Market Classic &amp; Evening Delivery palettes from the lab · copy mirrored from the production apps · prepaid only, no cash on delivery</p>
+</div>
+</div>
+<script src="fx.js"></script>
+<script>
+DGFX.mount(document.getElementById('amb'),'drift',{count:20,alpha:.4,colors:['#1F5130','#143B22','#F5C84C']});
+</script>
+</body>
+</html>
