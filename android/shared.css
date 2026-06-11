@@ -345,9 +345,9 @@ body.rider .st-pending,body.dark .st-pending{color:#E9C24A}
   background:var(--mint);border:none;
   display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none;
 }
-body.rider .swipe{background:#1E3526}
+body.dark .swipe,body.rider .swipe{background:#1E3526}
 .swipe .lbl{font-size:13.5px;font-weight:700;color:var(--grocer);transition:opacity .2s}
-body.rider .swipe .lbl{color:#7FB069}
+body.dark .swipe .lbl,body.rider .swipe .lbl{color:#7FB069}
 .swipe .thumb{
   position:absolute;left:5px;top:5px;width:48px;height:48px;border-radius:14px;
   background:var(--grocer);color:var(--on-brand);display:grid;place-items:center;
