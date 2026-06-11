@@ -1,6 +1,22 @@
-# digrocer · brand concept lab
+# digrocer · brand concept
 
-A single-file brand decision lab for **digrocer**. Open [`index.html`](index.html) in any browser — no build, no dependencies.
+Brand exploration for **DiGrocer** — a decision lab plus a full iOS-27 concept of the real apps. Everything is plain HTML/CSS/JS: no build, no dependencies, open any file in a browser.
+
+## ✦ The iOS-27 concept (`concept/`)
+
+Every screen of the production **customer** and **rider** apps, mirrored detail-for-detail from the real codebase (screens, flows, copy, the Warm-Market palette from `Color.kt`, the Kente-D mark) — then transformed into the liquid-glass iOS-27 language with a graceful floor for older devices.
+
+- [`concept/index.html`](concept/index.html) — hub
+- [`concept/customer.html`](concept/customer.html) — 21 screens: splash (particle logo) → onboarding → auth → home (live-order pill, cart bar, one-tap steppers) → explore/search → deals → product → cart (promo codes, real fee math) → checkout (Paystack / wallet) → receipt (particle ✓) → live tracking (moving rider) → orders → order detail → favourites → wallet (MoMo methods) → profile → notifications → settings (working dark mode) → address edit/picker → support chat
+- [`concept/rider.html`](concept/rider.html) — dark, map-centric: splash → auth → 2-step sign-up → pending review → the full delivery lifecycle (go online → 30s offer countdown → ride to store → item checklist → swipe-to-confirm pickup → deliver → photo proof → swipe to complete → payout celebration) → earnings (GH₵ 12 floor) → technical support
+- `concept/shared.css` — the design system (Warm-Market tokens, glass, dock, springs)
+- `concept/fx.js` — the particle engine (Kente-D assembles from motes, leaf bursts, check spirals, drift, pollen)
+
+**Graceful floor:** glass → soft solids via `@supports`; `prefers-reduced-motion` → settled stills; particles pause off-screen; P3 color only where supported; prepaid only — no cash on delivery anywhere.
+
+## ✦ The decision lab (`index.html`)
+
+A single-file brand decision lab. Open [`index.html`](index.html) in any browser.
 
 ## What's inside
 
