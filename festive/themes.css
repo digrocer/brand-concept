@@ -1,0 +1,142 @@
+/* ============================================================
+   DiGrocer · Ghana festive-calendar themes
+   Six seasonal skins layered on top of concept/shared.css.
+   Each theme is a body class that re-points the Warm-Market
+   tokens — components, glass, gradients and particles all
+   recolor for free. Apply: <body class="theme-bronya">.
+
+   The calendar:
+     theme-independence  Independence Day        6 March
+     theme-easter        Kwahu Easter            March / April
+     theme-eid           Eid al-Fitr & al-Adha   lunar calendar
+     theme-homowo        Homowo (Ga harvest)     August / September
+     theme-hogbetsotso   Hogbetsotso Za          1st Saturday, November
+     theme-bronya        Bronya (Christmas)      December
+============================================================ */
+
+/* ---------- 🇬🇭 Independence Day · 6 March ----------
+   The flag itself: red of the struggle, gold of the land,
+   green of the forests — and the Black Star. */
+body.theme-independence{
+  --canvas:#FFF8EE; --ink:#1C1410; --ink-muted:#7A6E60;
+  --hairline:#F0E4CE;
+  --forest:#00482B; --grocer:#006B3F;
+  --mint:#E3F2E9; --mint-deep:#B9E0CB;
+  --harvest:#FCD116; --harvest-soft:#FFF6D2;
+  --berry:#CE1126;
+  --shadow:0 6px 24px rgba(28,20,16,.10);
+  --shadow-pop:0 18px 44px rgba(28,20,16,.18);
+}
+
+/* ---------- 🪂 Kwahu Easter · March / April ----------
+   Paragliders off Mount Odweanoma — ridge-top sky blues,
+   morning haze, a sunrise of harvest gold. */
+body.theme-easter{
+  --canvas:#F2F8FB; --ink:#10222C; --ink-muted:#64798A;
+  --hairline:#DEEAF2;
+  --forest:#0E5E8A; --grocer:#2196C9;
+  --mint:#E1F2FA; --mint-deep:#B5E0F2;
+  --harvest:#F5A623; --harvest-soft:#FDF0D9;
+  --berry:#E0452B;
+  --shadow:0 6px 24px rgba(16,34,44,.10);
+  --shadow-pop:0 18px 44px rgba(16,34,44,.18);
+}
+
+/* ---------- 🌙 Eid · al-Fitr & al-Adha (lunar) ----------
+   Deep emerald and burnished gold — crescent-moon calm,
+   cream prayer-cloth surfaces. */
+body.theme-eid{
+  --canvas:#F7F9F3; --ink:#14241B; --ink-muted:#6E7C70;
+  --hairline:#E6EDDF;
+  --forest:#0A5A38; --grocer:#117A4E;
+  --mint:#E4F4EA; --mint-deep:#BFE7CF;
+  --harvest:#D4AF37; --harvest-soft:#F7EFD4;
+  --berry:#C0392B;
+  --shadow:0 6px 24px rgba(20,36,27,.10);
+  --shadow-pop:0 18px 44px rgba(20,36,27,.18);
+}
+
+/* ---------- 🌽 Homowo · August / September ----------
+   The Ga harvest that hoots at hunger — roasted maize,
+   corn-silk golds, red-clay earth, kpokpoi. */
+body.theme-homowo{
+  --canvas:#FBF4E4; --ink:#2A1B0C; --ink-muted:#84715A;
+  --hairline:#EFE2C6;
+  --forest:#8C4A0F; --grocer:#C97016;
+  --mint:#F6E9C6; --mint-deep:#EAD191;
+  --harvest:#E9B41F; --harvest-soft:#FBF0CF;
+  --berry:#C62F22;
+  --shadow:0 6px 24px rgba(42,27,12,.10);
+  --shadow-pop:0 18px 44px rgba(42,27,12,.18);
+}
+
+/* ---------- 🥁 Hogbetsotso Za · 1st Saturday, November ----------
+   The Anlo-Ewe exodus remembered — deep kente indigo,
+   drum-skin red, threads of gold. */
+body.theme-hogbetsotso{
+  --canvas:#F5F4FB; --ink:#171530; --ink-muted:#6E6C8A;
+  --hairline:#E5E3F4;
+  --forest:#2D2580; --grocer:#4338A8;
+  --mint:#E8E7F8; --mint-deep:#C9C6EE;
+  --harvest:#E3A81C; --harvest-soft:#F9F0D5;
+  --berry:#D03A2B;
+  --shadow:0 6px 24px rgba(23,21,48,.10);
+  --shadow-pop:0 18px 44px rgba(23,21,48,.18);
+}
+
+/* ---------- 🎄 Bronya · December ----------
+   Christmas in Ghana — richer market greens, candy red,
+   warm gold, sobolo on ice. */
+body.theme-bronya{
+  --canvas:#FAF3EC; --ink:#1B2018; --ink-muted:#75705F;
+  --hairline:#EFE3D2;
+  --forest:#0C4A24; --grocer:#157A3D;
+  --mint:#E2F1E5; --mint-deep:#BFE3C8;
+  --harvest:#E9B53C; --harvest-soft:#FBF0CF;
+  --berry:#D6261E;
+  --shadow:0 6px 24px rgba(27,32,24,.10);
+  --shadow-pop:0 18px 44px rgba(27,32,24,.18);
+}
+
+/* ---------- glow shadows follow the season ----------
+   shared.css bakes the brand green into a few glows; when a
+   festival re-points --grocer / --harvest, retint them too.
+   color-mix() where available — elsewhere the stock glow stays. */
+@supports (color: color-mix(in srgb, red 50%, transparent)){
+  body[class*="theme-"] .btn{
+    box-shadow:0 8px 22px color-mix(in srgb, var(--grocer) 35%, transparent);
+  }
+  body[class*="theme-"] .btn.tonal,
+  body[class*="theme-"] .btn.ghost,
+  body[class*="theme-"] .btn.danger{box-shadow:none}
+  body[class*="theme-"] .btn.harvest{
+    box-shadow:0 8px 22px color-mix(in srgb, var(--harvest) 35%, transparent);
+  }
+  body[class*="theme-"] .step{
+    box-shadow:0 6px 16px color-mix(in srgb, var(--grocer) 40%, transparent);
+  }
+  body[class*="theme-"] .cell:active{
+    background:color-mix(in srgb, var(--grocer) 6%, transparent);
+  }
+  body[class*="theme-"] .field input:focus,
+  body[class*="theme-"] .field textarea:focus{
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--grocer) 14%, transparent);
+  }
+  body[class*="theme-"] .dock button.on::before{
+    background:color-mix(in srgb, var(--grocer) 14%, transparent);
+  }
+  body[class*="theme-"] .tl .step-row.now .dot{
+    box-shadow:0 0 0 5px color-mix(in srgb, var(--grocer) 18%, transparent);
+  }
+}
+
+/* ---------- festive ribbon ----------
+   A slim seasonal stripe under the top of the screen — the
+   flag for Independence, kente threads elsewhere. */
+.fest-ribbon{
+  height:5px;border-radius:99px;margin:2px 20px 0;
+  background:linear-gradient(90deg,var(--forest) 0 33%,var(--harvest) 33% 66%,var(--berry) 66%);
+}
+body.theme-independence .fest-ribbon{
+  background:linear-gradient(90deg,#CE1126 0 33%,#FCD116 33% 66%,#006B3F 66%);
+}

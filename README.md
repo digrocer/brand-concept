@@ -9,6 +9,22 @@ The same two apps, dressed in the **lab's own theme** — Market Classic by day,
 - [`ios/`](ios/index.html) — the **iOS-27 feel**: liquid glass, Dynamic Island, springy motion, particle Sprout-d splash, graceful `@supports` floor.
 - [`android/`](android/index.html) — the **Android 16 feel**: Material 3 Expressive. Tonal surfaces instead of blur, ink ripples on every tap, shape-morphing buttons, flush M3 navigation bar with pill indicator, M3 switches, punch-hole camera + gesture handle, emphasized easing (no overshoot), Roboto Flex.
 
+## ✦ Festive seasons of Ghana (`festive/`)
+
+Six seasonal skins for the Warm-Market system, drawn from Ghana's festive calendar — each is **one body class** that re-points the design tokens, so every component, gradient and particle recolors with the season.
+
+| Theme | Festival | When |
+|---|---|---|
+| `theme-independence` | 🇬🇭 Independence Day — the flag and the Black Star | 6 March |
+| `theme-easter` | 🪂 Kwahu Easter — paragliding skies off Odweanoma | March / April |
+| `theme-eid` | 🌙 Eid al-Fitr & al-Adha — emerald and burnished gold | lunar calendar |
+| `theme-homowo` | 🌽 Homowo — the Ga harvest that hoots at hunger | August / September |
+| `theme-hogbetsotso` | 🥁 Hogbetsotso Za — Anlo-Ewe kente indigo | 1st Saturday, November |
+| `theme-bronya` | 🎄 Bronya — Christmas in the markets | December |
+
+- [`festive/index.html`](festive/index.html) — live showcase: a phone-frame home screen that reskins per festival (greeting, promo, categories, products, particle palette), with a **follow-the-calendar** mode that wears the current festival — or leans toward the next one coming up. Deep-linkable: `#homowo`, `#eid`, …
+- `festive/themes.css` — the six token sets, ready to drop into `customer.html` / `rider.html`. Glow shadows retint via `color-mix()` behind `@supports`; older engines keep the stock green glow. Eid follows the lunar calendar, so it's flagged server-side rather than by date math.
+
 ## ✦ The original iOS-27 concept (`concept/`)
 
 Every screen of the production **customer** and **rider** apps, mirrored detail-for-detail from the real codebase (screens, flows, copy, the Warm-Market palette from `Color.kt`, the Kente-D mark) — then transformed into the liquid-glass iOS-27 language with a graceful floor for older devices.
