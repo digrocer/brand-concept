@@ -1,0 +1,31 @@
+name: Copy to digrocer.github.io
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout brand-concept
+        uses: actions/checkout@v4
+        with:
+          ref: claude/ghana-festive-themes-2d2i3u
+          path: source
+
+      - name: Clone digrocer.github.io
+        run: |
+          git clone https://x-access-token:${{ secrets.PAGES_PAT }}@github.com/digrocer/digrocer.github.io.git target
+
+      - name: Copy files
+        run: |
+          rsync -av --exclude='.git' --exclude='.github' source/ target/
+
+      - name: Commit and push
+        run: |
+          cd target
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -A
+          git diff --cached --quiet || git commit -m "Copy from brand-concept (festive themes)"
+          git push
