@@ -241,9 +241,10 @@ body.rider .glass::before,body.dark .glass::before{
   position:absolute;left:14px;right:14px;bottom:86px;z-index:59;
   border-radius:22px;padding:12px 14px;display:flex;align-items:center;gap:11px;
   background:var(--forest);color:#fff;box-shadow:var(--shadow-pop);
-  transform:translateY(160%);transition:transform .45s var(--spring);cursor:pointer;border:none;
+  transform:translateY(170px);opacity:0;pointer-events:none;cursor:pointer;border:none;
+  transition:transform .45s var(--spring),opacity .25s ease;
 }
-.cartbar.show{transform:none}
+.cartbar.show{transform:none;opacity:1;pointer-events:auto}
 .cartbar .n{
   width:30px;height:30px;border-radius:50%;background:var(--harvest);color:#3A2A05;
   display:grid;place-items:center;font-size:13px;font-weight:900;flex:none;
